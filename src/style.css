@@ -1,0 +1,53 @@
+/* src/styles.css */  
+
+body {  
+    font-family: Arial, sans-serif;  
+    background-color: #f4f4f4;  
+    height: 100vh; /* Ensure the body takes up full viewport height */  
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+    margin: 0;  
+}  
+
+.form-container {  
+    background-color: #fff;  
+    border: 2px solid #007BFF; /* Border color */  
+    border-radius: 8px;  
+    padding: 20px;  
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  
+    width: 400px; /* Set a fixed width for the form */  
+}  
+
+form {  
+    display: flex;  
+    flex-direction: column; /* Stack inputs vertically */  
+}  
+
+input {  
+    padding: 10px;  
+    margin: 10px 0; /* Space between inputs */  
+    border: 1px solid #ccc;  
+    border-radius: 4px;  
+    font-size: 14px;  
+}  
+
+button {  
+    padding: 10px;  
+    margin-top: 10px;  
+    border: none;  
+    border-radius: 4px;  
+    background-color: #007BFF; /* Button color */  
+    color: white;  
+    font-size: 16px;  
+    cursor: pointer;  
+}  
+
+button:hover {  
+    background-color: #0056b3; /* Darker button on hover */  
+}  
+
+.error {  
+    color: red;  
+    font-size: 14px;  
+}

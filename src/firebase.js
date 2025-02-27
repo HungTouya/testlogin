@@ -1,22 +1,24 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth"; // Import Firebase Authentication
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";  
 
-// Your Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAwvoeT8tQsRKibLTKmAEYsmW07DhI_B7o",
-  authDomain: "diabeteweb-9a012.firebaseapp.com",
-  projectId: "diabeteweb-9a012",
-  storageBucket: "diabeteweb-9a012.appspot.com", // Fixed incorrect storage domain
-  messagingSenderId: "629871986323",
-  appId: "1:629871986323:web:457837dfb8bcb24fff2f66",
-  measurementId: "G-EZ0NDCZC4C",
-};
+const firebaseConfig = {  
+  apiKey: "AIzaSyC9pAhQ2CFE3CmEB3wyhIZLTlnV2QFbzcc",  
+  authDomain: "asdf-fdd3b.firebaseapp.com",  
+  projectId: "asdf-fdd3b",  
+  storageBucket: "asdf-fdd3b.appspot.com",  
+  messagingSenderId: "146345956782",  
+  appId: "1:146345956782:web:2b0fd0d8689ff63714243f",  
+  measurementId: "G-F77T4WYQ0D",  
+};  
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app); // ✅ Firestore initialized correctly
+const auth = getAuth(app);
 const analytics = getAnalytics(app);
-const auth = getAuth(app); // Initialize Firebase Auth
 
-export { analytics, auth }; // Export auth for use in authentication components
+export { db, auth, analytics };
+export default app;
+

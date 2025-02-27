@@ -1,38 +1,56 @@
-// src/App.js  
-import React, { useState, useEffect } from 'react';  
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';  
-import { AuthProvider } from './AuthContext';  
-import { auth } from './firebase';  
-import { onAuthStateChanged } from 'firebase/auth';  
-import Register from './Register';  
-import Login from './Login';  
-import VerifyEmail from './VerifyEmail';  
-import Profile from './Profile';  
-import PrivateRoute from './PrivateRoute';  
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from "./Register";
+import Login from "./Login";
+import Profile from "./Profile";
+import { auth } from "./firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
-function App() {  
-    const [currentUser, setCurrentUser] = useState(null);  
-    const [timeActive, setTimeActive] = useState(false);  
+function App() {
+    const [user, setUser] = useState(null);
 
-    useEffect(() => {  
-        const unsubscribe = onAuthStateChanged(auth, (user) => {  
-            setCurrentUser(user);  
-        });  
-        return unsubscribe;  
-    }, []);  
+    useEffect(() => {
+        // Listen for authentication state changes
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
 
-    return (  
-        <AuthProvider value={{ currentUser, setCurrentUser, timeActive, setTimeActive }}>  
-            <Router>  
-                <Switch>  
-                    <Route path="/register" component={Register} />  
-                    <Route path="/login" component={Login} />  
-                    <Route path="/verify-email" component={VerifyEmail} />  
-                    <PrivateRoute exact path="/profile" component={Profile} />  
-                </Switch>  
-            </Router>  
-        </AuthProvider>  
-    );  
-}  
+        return () => unsubscribe(); // Cleanup on unmount
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Error signing out: ", error);
+        }
+    };
+
+    return (
+        <Router>
+            <div className="App">
+                <nav>
+                    <h2>Cooking App</h2>
+                    {user ? (
+                        <>
+                            <p>Welcome, {user.email}</p>
+                            <button onClick={handleLogout}>Logout</button>
+                        </>
+                    ) : (
+                        <p>Please login or register.</p>
+                    )}
+                </nav>
+
+                <Routes>
+                    <Route path="/" element={user ? <Profile /> : <Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/profile" element={user ? <Profile /> : <Login />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+}
 
 export default App;
+

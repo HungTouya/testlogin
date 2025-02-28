@@ -3,49 +3,41 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
 import Profile from "./Profile";
-import { auth } from "./firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import AdminDashboard from "./AdminDashboard";
+import UserDashboard from "./UserDashboard"; // ✅ Import User Page
+import { auth, db } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 function App() {
     const [user, setUser] = useState(null);
+    const [role, setRole] = useState(null);
 
     useEffect(() => {
-        // Listen for authentication state changes
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                const userDoc = await getDoc(doc(db, "customersData", currentUser.uid));
+                if (userDoc.exists()) {
+                    setRole(userDoc.data().role || "user");
+                }
+            } else {
+                setRole(null);
+            }
         });
 
-        return () => unsubscribe(); // Cleanup on unmount
+        return () => unsubscribe();
     }, []);
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error("Error signing out: ", error);
-        }
-    };
 
     return (
         <Router>
             <div className="App">
-                <nav>
-                    <h2>Cooking App</h2>
-                    {user ? (
-                        <>
-                            <p>Welcome, {user.email}</p>
-                            <button onClick={handleLogout}>Logout</button>
-                        </>
-                    ) : (
-                        <p>Please login or register.</p>
-                    )}
-                </nav>
-
                 <Routes>
-                    <Route path="/" element={user ? <Profile /> : <Login />} />
+                    <Route path="/" element={user ? (role === "admin" ? <AdminDashboard /> : <UserDashboard />) : <Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/profile" element={user ? <Profile /> : <Login />} />
+                    <Route path="/user-dashboard/*" element={user && role !== "admin" ? <UserDashboard /> : <Login />} />
+                    <Route path="/admin-dashboard" element={user && role === "admin" ? <AdminDashboard /> : <Login />} />
                 </Routes>
             </div>
         </Router>
@@ -53,4 +45,7 @@ function App() {
 }
 
 export default App;
+
+
+
 

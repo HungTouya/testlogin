@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { auth, db } from "./firebase";
-import { doc, setDoc } from "firebase/firestore"; // ✅ Use setDoc instead of addDoc
+import { doc, setDoc } from "firebase/firestore";
 import "./style.css";
 
 function Register() {
@@ -11,6 +11,7 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [role, setRole] = useState("user"); // Default role is "user"
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -32,16 +33,17 @@ function Register() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // ✅ Store user data in Firestore with UID as the document ID
+            // Store user data with role in Firestore
             await setDoc(doc(db, "customersData", user.uid), {
                 name: customerName,
                 phone,
                 email,
                 uid: user.uid,
-                diabetesType: "", // Default value
+                diabetesType: "",
+                role, // Save the selected role
             });
 
-            navigate("/profile"); // Redirect to profile
+            navigate("/profile");
         } catch (err) {
             setError(err.message);
         }
@@ -56,6 +58,13 @@ function Register() {
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" required />
+
+                {/* Role selection */}
+                <select value={role} onChange={(e) => setRole(e.target.value)}>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+
                 <button type="submit">Register</button>
                 {error && <p className="error">{error}</p>}
             </form>
@@ -65,6 +74,7 @@ function Register() {
 }
 
 export default Register;
+
 
 
 

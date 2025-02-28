@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
+import { doc, getDoc } from "firebase/firestore";
 import "./style.css";
 
 function Login() {
@@ -13,11 +14,37 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
+
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate("/profile");
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            if (!user) {
+                setError("Login failed. Please try again.");
+                return;
+            }
+
+            // Fetch user role from Firestore
+            const userDocRef = doc(db, "customersData", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                const role = userData.role || "user"; // Default to "user"
+
+                console.log("User Role:", role);
+
+                if (role === "admin") {
+                    navigate("/admin-dashboard"); // ✅ Redirect to Admin
+                } else {
+                    navigate("/user-dashboard"); // ✅ Redirect to Full User Page
+                }
+            } else {
+                setError("User data not found in database.");
+            }
         } catch (err) {
-            setError(err.message);
+            setError("Incorrect email or password.");
+            console.error("Login Error:", err);
         }
     };
 
@@ -25,8 +52,20 @@ function Login() {
         <div className="form-container">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+                <input 
+                    type="email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="Email" 
+                    required 
+                />
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Password" 
+                    required 
+                />
                 <button type="submit">Login</button>
                 {error && <p className="error">{error}</p>}
             </form>
@@ -36,3 +75,4 @@ function Login() {
 }
 
 export default Login;
+

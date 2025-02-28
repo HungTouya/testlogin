@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
-import Profile from "./Profile";
 import AdminDashboard from "./AdminDashboard";
 import UserDashboard from "./UserDashboard"; // ✅ Import User Page
 import { auth, db } from "./firebase";

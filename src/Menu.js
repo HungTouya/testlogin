@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { db } from "./firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { Link } from "react-router-dom";
 
 function Menu() {
     const [recipes, setRecipes] = useState([]);
@@ -9,9 +9,13 @@ function Menu() {
     useEffect(() => {
         const fetchRecipes = async () => {
             const querySnapshot = await getDocs(collection(db, "recipes"));
-            const recipesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const recipesList = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
             setRecipes(recipesList);
         };
+
         fetchRecipes();
     }, []);
 
@@ -21,7 +25,7 @@ function Menu() {
             <ul>
                 {recipes.map(recipe => (
                     <li key={recipe.id}>
-                        <Link to={`/recipe/${recipe.id}`}>{recipe.name}</Link>
+                        <Link to={`/user-dashboard/menu/recipes/${recipe.id}`}>{recipe.name}</Link> {/* ✅ Correct path */}
                     </li>
                 ))}
             </ul>
@@ -30,3 +34,5 @@ function Menu() {
 }
 
 export default Menu;
+
+

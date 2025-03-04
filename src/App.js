@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./Register";
-import Login from "./Login";
-import AdminDashboard from "./AdminDashboard";
-import UserDashboard from "./UserDashboard"; // ✅ Import User Page
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard"; // ✅ Import User Page
 import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";

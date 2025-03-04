@@ -3,8 +3,8 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Menu from "./Menu";
 import Profile from "./Profile";
 import RecipePage from "./RecipePage"; // ✅ Ensure correct import
-import { auth } from "./firebase";
-import "./UserDashboard.css";
+import { auth } from "../firebase";
+import "../css/UserDashboard.css";
 
 function UserDashboard() {
     const navigate = useNavigate();

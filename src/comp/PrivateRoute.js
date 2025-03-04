@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./Register";
-import Login from "./Login";
-import Profile from "./Profile";
-import AdminDashboard from "./AdminDashboard";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import Profile from "../pages/Profile";
+import AdminDashboard from "../pages/AdminDashboard";
 import PrivateRoute from "./PrivateRoute"; // ✅ Import PrivateRoute
 
 function App() {

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, db } from "./firebase";
+import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
-import "./style.css";
+import "../css/style.css";
 
 function Register() {
     const [customerName, setCustomerName] = useState("");

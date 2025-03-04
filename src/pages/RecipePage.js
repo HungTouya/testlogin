@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
-import { db } from "./firebase";
+import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 function RecipePage() {

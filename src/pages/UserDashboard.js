@@ -1,31 +1,24 @@
 import React from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Home from "./Home";
 import Menu from "./Menu";
+import Schedule from "./Schedule";
 import Profile from "./Profile";
 import RecipePage from "./RecipePage"; // ✅ Ensure correct import
-import { auth } from "../firebase";
+import Navbar from "../comp/Navbar"; // ✅ Now using the separate Navbar component
 import "../css/UserDashboard.css";
 
 function UserDashboard() {
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        auth.signOut();
-        navigate("/login"); // Redirect to login page after logout
-    };
-
     return (
         <div className="user-dashboard">
-            {/* Toolbar for navigation */}
-            <div className="toolbar">
-                <Link to="/user-dashboard/menu">Menu</Link>
-                <Link to="/user-dashboard/profile">Profile</Link>
-                <button onClick={handleLogout} className="logout-button">Logout</button>
-            </div>
+            {/* Navbar at the top */}
+            <Navbar />
 
             {/* Routes for user pages */}
             <Routes>
+                <Route path="home" element={<Home />} />
                 <Route path="menu" element={<Menu />} />
+                <Route path="schedule" element={<Schedule />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="menu/recipes/:id" element={<RecipePage />} /> {/* ✅ Correct path */}
             </Routes>
@@ -34,6 +27,9 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
+
+
+
 
 
 

@@ -11,7 +11,6 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState("user"); // Default role is "user"
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -33,14 +32,14 @@ function Register() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Store user data with role in Firestore
+            // Store user data in Firestore with role automatically set to "user"
             await setDoc(doc(db, "customersData", user.uid), {
                 name: customerName,
                 phone,
                 email,
                 uid: user.uid,
                 diabetesType: "",
-                role, // Save the selected role
+                role: "user",
             });
 
             navigate("/profile");
@@ -53,17 +52,41 @@ function Register() {
         <div className="form-container">
             <h2>Register</h2>
             <form onSubmit={handleRegister}>
-                <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Name" required />
-                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" required />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
-                <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" required />
-
-                {/* Role selection */}
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
+                <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Name"
+                    required
+                />
+                <input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Phone"
+                    required
+                />
+                <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                />
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                />
+                <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    required
+                />
 
                 <button type="submit">Register</button>
                 {error && <p className="error">{error}</p>}
@@ -74,6 +97,7 @@ function Register() {
 }
 
 export default Register;
+
 
 
 

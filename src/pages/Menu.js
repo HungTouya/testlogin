@@ -21,7 +21,7 @@ function Menu() {
 
     return (
         <div>
-            <h2>Menu</h2>
+            <h1>Menu</h1>
             <ul>
                 {recipes.map(recipe => (
                     <li key={recipe.id}>

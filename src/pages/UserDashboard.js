@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Menu from "./Menu";
@@ -11,10 +11,8 @@ import "../css/UserDashboard.css";
 function UserDashboard() {
     return (
         <div className="user-dashboard min-h-screen bg-gray-100 dark:bg-gray-900">
-            {/* Navbar at the top */}
             <Navbar />
 
-            {/* Page Content with Padding (Prevents Overlapping with Navbar) */}
             <div className="pt-20 max-w-screen-xl mx-auto px-6">
                 <Routes>
                     <Route path="home" element={<Home />} />
@@ -29,6 +27,7 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
+
 
 
 

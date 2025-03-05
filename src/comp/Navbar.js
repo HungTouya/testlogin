@@ -16,7 +16,7 @@ function Navbar() {
             <div className="max-w-screen-xl mx-auto flex justify-between items-center w-full px-6">
                 {/* Left: Logo & SearchBar */}
                 <div className="flex items-center space-x-6">
-                    <span className="text-2xl font-semibold text-[#4e342e]">LOGO</span>
+                    <span className="text-2xl font-semibold text-[#4e342e]">DiabeticMealPlan</span>
                     <SearchBar className="hidden md:block" /> {/* SearchBar visible on medium screens and up */}
                 </div>
 

@@ -37,7 +37,7 @@ function Login() {
                 if (role === "admin") {
                     navigate("/admin-dashboard"); // ✅ Redirect to Admin
                 } else {
-                    navigate("/user-dashboard"); // ✅ Redirect to Full User Page
+                    navigate("/user-dashboard/home"); // ✅ Redirect to Full User Page
                 }
             } else {
                 setError("User data not found in database.");

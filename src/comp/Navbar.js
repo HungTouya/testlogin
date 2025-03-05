@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import SearchBar from "./Searchbar"; // ✅ Import the SearchBar component
+import SearchBar from "./Searchbar"; // ✅ Import SearchBar component
 
 function Navbar() {
     const navigate = useNavigate();
@@ -12,36 +12,32 @@ function Navbar() {
     };
 
     return (
-        <nav className="navbar fixed top-0 left-0 w-full bg-white shadow-md dark:bg-gray-900 z-50">
-            <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-                {/* Logo + SearchBar Container */}
-                <div className="flex items-center space-x-4">
-                    <span className="text-2xl font-semibold text-gray-900 dark:text-white">LOGO</span>
-                    <SearchBar /> {/* ✅ Search bar appears next to the logo */}
+        <nav className="fixed top-0 left-0 w-full bg-[#FAECD2] shadow-md z-50 h-16 flex items-center">
+            <div className="max-w-screen-xl mx-auto flex justify-between items-center w-full px-6">
+                
+                {/* Left: Logo & SearchBar */}
+                <div className="flex items-center space-x-6">
+                    <span className="text-2xl font-semibold text-[#4e342e]">LOGO</span>
+                    <SearchBar className="hidden md:block" /> {/* Search bar hidden on small screens */}
                 </div>
 
-                {/* Navigation Links */}
+                {/* Center: Navigation Links */}
                 <div className="hidden md:flex">
-                    <ul className="flex space-x-8 font-medium">
-                        <li>
-                            <Link to="/user-dashboard/home" className="nav-link">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/user-dashboard/menu" className="nav-link">Menu</Link>
-                        </li>
-                        <li>
-                            <Link to="/user-dashboard/schedule" className="nav-link">Schedule</Link>
-                        </li>
-                        <li>
-                            <Link to="/user-dashboard/profile" className="nav-link">Profile</Link>
-                        </li>
+                    <ul className="flex space-x-6 font-medium">
+                        <li><Link to="/user-dashboard/home" className="text-[#4e342e] hover:text-[#1347A3]">Home</Link></li>
+                        <li><Link to="/user-dashboard/menu" className="text-[#4e342e] hover:text-[#1347A3]">Menu</Link></li>
+                        <li><Link to="/user-dashboard/schedule" className="text-[#4e342e] hover:text-[#1347A3]">Schedule</Link></li>
+                        <li><Link to="/user-dashboard/profile" className="text-[#4e342e] hover:text-[#1347A3]">Profile</Link></li>
                     </ul>
                 </div>
 
-                {/* Logout Button */}
-                <div className="flex">
-                    <button onClick={handleLogout} className="logout-button">Logout</button>
-                </div>
+                {/* Right: Logout Button */}
+                <button 
+                    onClick={handleLogout} 
+                    className="bg-[#1347A3] text-white py-2 px-4 rounded-md hover:bg-[#0f3b82]"
+                >
+                    Logout
+                </button>
             </div>
         </nav>
     );

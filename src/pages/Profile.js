@@ -51,7 +51,7 @@ function Profile() {
           // Load quiz data if available
           setDiabetesType(data.diabetesType || "none");
           setFavoriteFlavors(data.favoriteFlavors || []);
-          // Mark quiz as submitted if both values are set (diabetesType not "none" and favoriteFlavors array has items)
+          // Mark quiz as submitted if values exist
           setQuizSubmitted(
             data.diabetesType && data.diabetesType !== "none" &&
             Array.isArray(data.favoriteFlavors) && data.favoriteFlavors.length > 0
@@ -126,17 +126,13 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Navbar */}
-      <nav className="bg-white shadow-md dark:bg-gray-800 py-4">
-        <div className="max-w-5xl mx-auto flex justify-between items-center px-4">
-          <span className="text-xl font-semibold text-gray-700 dark:text-white">Profile</span>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <p className="text-3xl font-bold text-center mb-8">Profile</p>
+
 
       {/* Tabs */}
-      <div className="max-w-5xl mx-auto mt-6 px-4">
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-3 flex justify-center gap-6">
+      <div className="max-w-4xl mx-auto mt-6">
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex justify-center gap-6">
           <button
             className={`px-4 py-2 rounded-lg font-medium ${
               activeTab === "profile"
@@ -161,33 +157,33 @@ function Profile() {
       </div>
 
       {/* Content Section */}
-      <div className="max-w-4xl mx-auto mt-6 px-4">
-        {/* My Profile Section (diabetes type is not displayed here) */}
+      <div className="max-w-4xl mx-auto mt-6">
+        {/* My Profile Section */}
         {activeTab === "profile" && (
           <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Profile Information</h2>
-            <div className="mt-3 space-y-2 text-gray-600 dark:text-gray-300">
+            <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Profile Information</h2>
+            <div className="space-y-4 text-gray-600 dark:text-gray-300">
               {editing ? (
                 <>
-                  <label className="block">
-                    <span className="text-gray-700 dark:text-gray-200">Name:</span>
+                  <div>
+                    <label className="block text-lg font-medium">Name:</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 mt-1 rounded-lg border dark:bg-gray-700 dark:text-white"
+                      className="w-full mt-1 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
                       value={updatedData.name}
                       onChange={(e) => setUpdatedData({ ...updatedData, name: e.target.value })}
                     />
-                  </label>
-                  <label className="block mt-2">
-                    <span className="text-gray-700 dark:text-gray-200">Phone:</span>
+                  </div>
+                  <div>
+                    <label className="block text-lg font-medium">Phone:</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 mt-1 rounded-lg border dark:bg-gray-700 dark:text-white"
+                      className="w-full mt-1 px-3 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
                       value={updatedData.phone}
                       onChange={(e) => setUpdatedData({ ...updatedData, phone: e.target.value })}
                     />
-                  </label>
-                  <div className="mt-4 flex gap-4">
+                  </div>
+                  <div className="flex gap-4 mt-4">
                     <button onClick={handleSave} className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                       Save
                     </button>
@@ -198,9 +194,9 @@ function Profile() {
                 </>
               ) : (
                 <>
-                  <p><strong>Name:</strong> {userData.name}</p>
-                  <p><strong>Email:</strong> {userData.email}</p>
-                  <p><strong>Phone:</strong> {userData.phone}</p>
+                  <p className="text-lg"><strong>Name:</strong> {userData.name}</p>
+                  <p className="text-lg"><strong>Email:</strong> {userData.email}</p>
+                  <p className="text-lg"><strong>Phone:</strong> {userData.phone}</p>
                   <button onClick={handleEdit} className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                     Edit
                   </button>
@@ -210,16 +206,16 @@ function Profile() {
           </div>
         )}
 
-        {/* Flavor & Health Quiz Section (Multi-step quiz using quizQuestions) */}
+        {/* Flavor & Health Quiz Section */}
         {activeTab === "flavor" && (
           <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Flavor & Health</h2>
+            <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Flavor & Health</h2>
             {quizSubmitted ? (
-              <div>
-                <p className="text-gray-600 dark:text-gray-300">
+              <div className="space-y-4 text-gray-600 dark:text-gray-300">
+                <p className="text-lg">
                   <strong>Diabetes Type:</strong> {diabetesType === "none" ? "None" : `Type ${diabetesType}`}
                 </p>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-lg">
                   <strong>Favorite Flavors:</strong> {favoriteFlavors.join(", ") || "None"}
                 </p>
                 <button onClick={handleRetakeQuiz} className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
@@ -232,7 +228,7 @@ function Profile() {
                   if (index !== step) return null;
                   return (
                     <div key={index}>
-                      <h3 className="text-md font-medium text-gray-600 dark:text-gray-300 mt-4">{q.question}</h3>
+                      <h3 className="text-lg font-medium text-gray-600 dark:text-gray-300 mt-4">{q.question}</h3>
                       <div className="mt-2 space-y-2">
                         {q.options.map((option) => (
                           <label key={option.value} className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
@@ -266,7 +262,7 @@ function Profile() {
                     </div>
                   );
                 })}
-                <div className="mt-4 flex gap-4">
+                <div className="flex gap-4 mt-4">
                   {step > 0 && (
                     <button
                       type="button"

@@ -24,20 +24,18 @@ function Login() {
                 return;
             }
 
-            // Fetch user role from Firestore
             const userDocRef = doc(db, "customersData", user.uid);
             const userDocSnap = await getDoc(userDocRef);
 
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
-                const role = userData.role || "user"; // Default to "user"
-
+                const role = userData.role || "user"; 
                 console.log("User Role:", role);
 
                 if (role === "admin") {
-                    navigate("/admin-dashboard"); // ✅ Redirect to Admin
+                    navigate("/admin-dashboard"); 
                 } else {
-                    navigate("/user-dashboard/home"); // ✅ Redirect to Full User Page
+                    navigate("/user-dashboard/home"); 
                 }
             } else {
                 setError("User data not found in database.");

@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 
 function AddSchedule() {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loadingType, setLoadingType] = useState("");
     const [recipes, setRecipes] = useState([]);
     const [schedule, setSchedule] = useState({
         none: {},
@@ -25,56 +25,46 @@ function AddSchedule() {
         fetchRecipes();
     }, []);
 
-    const handleSelectMeal = (type, day, meal, recipeId) => {
-        const selectedRecipe = recipes.find(recipe => recipe.id === recipeId);
+    const handleSelectMeal = (type, day, meal, recipeName) => {
         setSchedule(prev => ({
             ...prev,
             [type]: {
                 ...prev[type],
                 [day]: {
                     ...prev[type][day],
-                    [meal]: {
-                        id: recipeId,
-                        name: selectedRecipe?.name || ""
-                    }
+                    [meal]: recipeName
                 }
             }
         }));
     };
 
-    const handleSaveSchedule = async () => {
-        setLoading(true);
+    const handleSaveIndividualSchedule = async (type) => {
+        setLoadingType(type);
         try {
-            await Promise.all(
-                Object.entries(schedule).map(([type, data]) =>
-                    setDoc(doc(db, "schedules", type), data)
-                )
-            );
-            alert("Schedules saved successfully!");
+            await setDoc(doc(db, "schedules", type), schedule[type]);
+            alert(`${type} schedule saved successfully!`);
         } catch (error) {
-            console.error("Error saving schedules: ", error);
-            alert("Failed to save schedules.");
+            console.error(`Error saving ${type} schedule: `, error);
+            alert(`Failed to save ${type} schedule.`);
         }
-        setLoading(false);
+        setLoadingType("");
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen flex flex-col overflow-hidden">
-            {/* Fixed top bar with back button and title */}
-            <div className="bg-white shadow-md p-4 flex items-center sticky top-0 z-10">
+        <div className="bg-gray-100 min-h-screen flex flex-col">
+            <header className="bg-white shadow-md p-4 flex items-center sticky top-0 z-10">
                 <button onClick={() => navigate("/admin-dashboard")} className="text-blue-600 flex items-center">
                     <FaArrowLeft className="mr-2" /> Back to Dashboard
                 </button>
                 <h2 className="text-2xl font-bold text-center flex-grow">Add Weekly Meal Schedule</h2>
-            </div>
+            </header>
 
-            {/* Scrollable content container */}
-            <div className="p-6 flex-grow overflow-y-auto">
+            <main className="p-6 flex-grow overflow-y-auto pt-56">
                 {Object.entries({ none: "General", type1: "Diabetes Type 1", type2: "Diabetes Type 2" }).map(([key, label]) => (
-                    <div key={key} className="mt-6 p-4 bg-white shadow rounded-lg overflow-x-auto">
-                        <h3 className="text-xl font-semibold text-center">{label}</h3>
-                        <div className="overflow-x-auto">
-                            <table className="w-full border-collapse border border-gray-300 mt-4">
+                    <div key={key} className="mt-16 p-4 bg-white shadow rounded-lg">
+                        <h3 className="text-xl font-semibold text-center mb-4">{label}</h3>
+                        <div>
+                            <table className="w-full border-collapse border border-gray-300">
                                 <thead>
                                     <tr className="bg-gray-200">
                                         <th className="border px-4 py-2">Meal</th>
@@ -90,11 +80,11 @@ function AddSchedule() {
                                                     <select 
                                                         className="border p-1 w-full"
                                                         onChange={(e) => handleSelectMeal(key, day, meal, e.target.value)}
-                                                        value={schedule[key]?.[day]?.[meal]?.id || ""}
+                                                        value={schedule[key]?.[day]?.[meal] || ""}
                                                     >
                                                         <option value="">Select</option>
                                                         {recipes.map(recipe => (
-                                                            <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
+                                                            <option key={recipe.id} value={recipe.name}>{recipe.name}</option>
                                                         ))}
                                                     </select>
                                                 </td>
@@ -104,22 +94,21 @@ function AddSchedule() {
                                 </tbody>
                             </table>
                         </div>
+                        <div className="flex justify-center mt-4">
+                            <button 
+                                onClick={() => handleSaveIndividualSchedule(key)} 
+                                className="bg-blue-600 text-white px-4 py-2 rounded" 
+                                disabled={loadingType === key}
+                            >
+                                {loadingType === key ? "Saving..." : `Save ${label} Schedule`}
+                            </button>
+                        </div>
                     </div>
                 ))}
-            </div>
-
-            {/* Save button with sticky positioning */}
-            <div className="bg-white p-4 shadow-md sticky bottom-0 flex justify-center">
-                <button onClick={handleSaveSchedule} className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>
-                    {loading ? "Saving..." : "Save Schedules"}
-                </button>
-            </div>
+            </main>
         </div>
     );
 }
 
 export default AddSchedule;
-
-
-
 

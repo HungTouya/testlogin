@@ -32,6 +32,7 @@ function Profile() {
   const [diabetesType, setDiabetesType] = useState("none");
   const [favoriteFlavors, setFavoriteFlavors] = useState([]);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,7 +48,7 @@ function Profile() {
           });
           setDiabetesType(data.diabetesType || "none");
           setFavoriteFlavors(data.favoriteFlavors || []);
-          setQuizSubmitted(data.diabetesType && data.favoriteFlavors?.length > 0);
+          setQuizSubmitted(data.diabetesType !== "none" && data.favoriteFlavors?.length > 0);
         } else {
           console.error("User data not found");
         }
@@ -73,7 +74,7 @@ function Profile() {
   };
 
   const handleSubmitQuiz = async () => {
-    if (auth.currentUser && !quizSubmitted) {
+    if (auth.currentUser) {
       const userRef = doc(db, "customersData", auth.currentUser.uid);
       try {
         await updateDoc(userRef, { diabetesType, favoriteFlavors });
@@ -88,6 +89,7 @@ function Profile() {
     setDiabetesType("none");
     setFavoriteFlavors([]);
     setQuizSubmitted(false);
+    setCurrentQuestion(0);
     if (auth.currentUser) {
       const userRef = doc(db, "customersData", auth.currentUser.uid);
       try {
@@ -96,6 +98,50 @@ function Profile() {
         console.error("Error resetting quiz data:", error);
       }
     }
+  };
+
+  const renderQuizQuestion = () => {
+    const question = quizQuestions[currentQuestion];
+
+    return (
+      <div>
+        <p className="text-lg mb-2">{question.question}</p>
+        {question.options.map(option => (
+          <label key={option.value} className="block mb-2">
+            <input
+              type={currentQuestion === 0 ? "radio" : "checkbox"}
+              name={currentQuestion === 0 ? "diabetesType" : "favoriteFlavors"}
+              value={option.value}
+              checked={currentQuestion === 0 ? diabetesType === option.value : favoriteFlavors.includes(option.value)}
+              onChange={(e) => {
+                if (currentQuestion === 0) {
+                  setDiabetesType(option.value);
+                } else {
+                  const updatedFlavors = e.target.checked
+                    ? [...favoriteFlavors, option.value]
+                    : favoriteFlavors.filter(flavor => flavor !== option.value);
+                  setFavoriteFlavors(updatedFlavors);
+                }
+              }}
+              className="mr-2"
+            />
+            {option.label}
+          </label>
+        ))}
+        <button
+          onClick={() => {
+            if (currentQuestion < quizQuestions.length - 1) {
+              setCurrentQuestion(currentQuestion + 1);
+            } else {
+              handleSubmitQuiz();
+            }
+          }}
+          className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+        >
+          {currentQuestion < quizQuestions.length - 1 ? "Next" : "Submit"}
+        </button>
+      </div>
+    );
   };
 
   if (!userData) {
@@ -140,9 +186,7 @@ function Profile() {
                 </button>
               </div>
             ) : (
-              <button onClick={handleSubmitQuiz} className="bg-blue-600 text-white py-2 px-4 rounded-lg">
-                Submit Quiz
-              </button>
+              renderQuizQuestion()
             )}
           </div>
         )}
@@ -152,6 +196,7 @@ function Profile() {
 }
 
 export default Profile;
+
 
 
 

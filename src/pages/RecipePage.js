@@ -39,6 +39,8 @@ function RecipePage() {
         )}
         <p className="mb-2"><strong>Calories:</strong> {recipe.kcal} kcal</p>
         <p className="mb-2"><strong>Carbohydrates:</strong> {recipe.carbohydrates}</p>
+        <p className="mb-2"><strong>Fat:</strong> {recipe.fat} g</p>
+        <p className="mb-2"><strong>Protein:</strong> {recipe.protein} g</p>
         <p className="mb-2"><strong>Ingredients:</strong> {recipe.ingredients.join(", ")}</p>
         <p className="mb-2"><strong>Cooking Instructions:</strong> {recipe.cookingInstructions}</p>
         {recipe.tip && (

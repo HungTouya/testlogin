@@ -7,7 +7,9 @@ function Schedule() {
   const [schedule, setSchedule] = useState({});
   const [customSchedule, setCustomSchedule] = useState({});
   const [recipesList, setRecipesList] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [editingMode, setEditingMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -43,6 +45,7 @@ function Schedule() {
         const recipesSnapshot = await getDocs(collection(db, "recipes"));
         const recipes = recipesSnapshot.docs.map(doc => doc.data().name);
         setRecipesList(recipes);
+        setFilteredRecipes(recipes);
       } catch (err) {
         console.error("Failed to fetch schedules:", err);
       } finally {
@@ -51,6 +54,11 @@ function Schedule() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const filtered = recipesList.filter(r => r.toLowerCase().includes(searchTerm.toLowerCase()));
+    setFilteredRecipes(filtered);
+  }, [searchTerm, recipesList]);
 
   const renderTable = (data) => (
     <table className="w-full border-collapse border border-gray-300 bg-white shadow-lg mt-4">
@@ -69,26 +77,41 @@ function Schedule() {
             {days.map((day, j) => (
               <td key={j} className="border border-gray-300 px-4 py-2">
                 {editingMode && activeTab === "custom" ? (
-                  <input
-                    list={`recipes-${day}-${meal}`}
-                    className="border rounded px-2 py-1 w-full"
-                    value={customSchedule[day]?.[meal] || ""}
-                    onChange={(e) => {
-                      const updated = { ...customSchedule };
-                      if (!updated[day]) updated[day] = {};
-                      updated[day][meal] = e.target.value;
-                      setCustomSchedule(updated);
-                    }}
-                    placeholder="Search food..."
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search food..."
+                      className="border p-1 rounded w-full"
+                      value={customSchedule[day]?.[meal] || ""}
+                      onChange={(e) => {
+                        const updated = { ...customSchedule };
+                        if (!updated[day]) updated[day] = {};
+                        updated[day][meal] = e.target.value;
+                        setCustomSchedule(updated);
+                      }}
+                      onFocus={() => setSearchTerm("")}
+                    />
+                    <div className="absolute bg-white border max-h-40 overflow-y-auto w-full z-10">
+                      {filteredRecipes.map((r, idx) => (
+                        <div
+                          key={idx}
+                          className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => {
+                            const updated = { ...customSchedule };
+                            if (!updated[day]) updated[day] = {};
+                            updated[day][meal] = r;
+                            setCustomSchedule(updated);
+                            setSearchTerm("");
+                          }}
+                        >
+                          {r}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 ) : (
                   data[day]?.[meal] || "-"
                 )}
-                <datalist id={`recipes-${day}-${meal}`}>
-                  {recipesList.map((r, index) => (
-                    <option key={index} value={r} />
-                  ))}
-                </datalist>
               </td>
             ))}
           </tr>
@@ -153,6 +176,18 @@ function Schedule() {
         <div className="overflow-x-auto">
           {activeTab === "expert" && renderTable(schedule)}
           {activeTab === "custom" && renderTable(customSchedule)}
+        </div>
+      )}
+
+      {/* Dialogflow chat appears only in custom tab */}
+      {activeTab === "custom" && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <df-messenger
+            intent="WELCOME"
+            chat-title="MealBot"
+            agent-id="YOUR_DIALOGFLOW_AGENT_ID"
+            language-code="en"
+          ></df-messenger>
         </div>
       )}
     </div>

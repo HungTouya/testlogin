@@ -39,7 +39,7 @@ function Home() {
   };
 
   const handleKeywordClick = (keyword) => {
-    navigate("/menu", { state: { keyword } });
+    navigate("/user-dashboard/menu", { state: { keyword } });
   };
 
   const handleRecipeClick = (recipeId) => {

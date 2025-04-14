@@ -1,17 +1,6 @@
-*{
-  box-sizing: border-box;
-}
-
-span{
-  display: block;
-}
-
-.center {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   margin: 0;

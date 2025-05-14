@@ -19,7 +19,6 @@ function Menu() {
         ...doc.data(),
       }));
 
-      // Apply keyword filter from Home.js
       if (filterKeyword) {
         recipesList = recipesList.filter((recipe) =>
           recipe.ingredients?.some((ingredient) =>
@@ -73,94 +72,97 @@ function Menu() {
     : recipes;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Menu</h1>
+    <div className="h-screen flex flex-col bg-gray-100">
+      {/* Header + Filters (fixed height) */}
+      <div className="p-6 flex-shrink-0 bg-gray-100 z-10">
+        <h1 className="text-3xl font-bold text-center mb-6">Menu</h1>
+        <div className="flex flex-wrap justify-center gap-4">
+          <select
+            className="bg-white border rounded px-4 py-2 text-gray-700"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="">Sort By</option>
+            <option value="name-asc">Name (A-Z)</option>
+            <option value="name-desc">Name (Z-A)</option>
+            <option value="kcal-asc">Calories (Low to High)</option>
+            <option value="kcal-desc">Calories (High to Low)</option>
+            <option value="carbs-asc">Carbs (Low to High)</option>
+            <option value="carbs-desc">Carbs (High to Low)</option>
+            <option value="protein-asc">Protein (Low to High)</option>
+            <option value="protein-desc">Protein (High to Low)</option>
+            <option value="fat-asc">Fat (Low to High)</option>
+            <option value="fat-desc">Fat (High to Low)</option>
+          </select>
 
-      <div className="mb-6 flex flex-wrap justify-center gap-4">
-        <select
-          className="bg-white border rounded px-4 py-2 text-gray-700"
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-        >
-          <option value="">Sort By</option>
-          <option value="name-asc">Name (A-Z)</option>
-          <option value="name-desc">Name (Z-A)</option>
-          <option value="kcal-asc">Calories (Low to High)</option>
-          <option value="kcal-desc">Calories (High to Low)</option>
-          <option value="carbs-asc">Carbs (Low to High)</option>
-          <option value="carbs-desc">Carbs (High to Low)</option>
-          <option value="protein-asc">Protein (Low to High)</option>
-          <option value="protein-desc">Protein (High to Low)</option>
-          <option value="fat-asc">Fat (Low to High)</option>
-          <option value="fat-desc">Fat (High to Low)</option>
-        </select>
-
-        <input
-          type="text"
-          placeholder="Filter by ingredient (e.g., beef)"
-          className="bg-white border rounded px-4 py-2 text-gray-700"
-          value={selectedIngredient}
-          onChange={(e) => setSelectedIngredient(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="Filter by ingredient (e.g., beef)"
+            className="bg-white border rounded px-4 py-2 text-gray-700"
+            value={selectedIngredient}
+            onChange={(e) => setSelectedIngredient(e.target.value)}
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortRecipes(filteredRecipes, sortOption).map((recipe) => (
-          <div
-            key={recipe.id}
-            className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
-          >
-            {recipe.imageUrl && (
-              <img
-                src={recipe.imageUrl}
-                alt={recipe.name}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
-            )}
-            <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{recipe.name}</h2>
-              {recipe.description && (
-                <p className="text-gray-600 mb-4">{recipe.description}</p>
+      {/* Scrollable Recipe List */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortRecipes(filteredRecipes, sortOption).map((recipe) => (
+            <div
+              key={recipe.id}
+              className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+            >
+              {recipe.imageUrl && (
+                <img
+                  src={recipe.imageUrl}
+                  alt={recipe.name}
+                  className="w-full h-48 object-cover rounded-t-lg"
+                />
               )}
-              <div className="flex flex-wrap gap-2 text-xs mb-4">
-                {recipe.kcal && (
-                  <span className="bg-gray-200 px-2 py-1 rounded">
-                    {recipe.kcal} kcal
-                  </span>
+              <div className="p-4">
+                <h2 className="text-xl font-semibold mb-2">{recipe.name}</h2>
+                {recipe.description && (
+                  <p className="text-gray-600 mb-4">{recipe.description}</p>
                 )}
-                {recipe.carbohydrates && (
-                  <span className="bg-gray-200 px-2 py-1 rounded">
-                    {recipe.carbohydrates}g Carbs
-                  </span>
-                )}
-                {recipe.protein && (
-                  <span className="bg-gray-200 px-2 py-1 rounded">
-                    {recipe.protein}g Protein
-                  </span>
-                )}
-                {recipe.fat && (
-                  <span className="bg-gray-200 px-2 py-1 rounded">
-                    {recipe.fat}g Fat
-                  </span>
-                )}
+                <div className="flex flex-wrap gap-2 text-xs mb-4">
+                  {recipe.kcal && (
+                    <span className="bg-gray-200 px-2 py-1 rounded">
+                      {recipe.kcal} kcal
+                    </span>
+                  )}
+                  {recipe.carbohydrates && (
+                    <span className="bg-gray-200 px-2 py-1 rounded">
+                      {recipe.carbohydrates}g Carbs
+                    </span>
+                  )}
+                  {recipe.protein && (
+                    <span className="bg-gray-200 px-2 py-1 rounded">
+                      {recipe.protein}g Protein
+                    </span>
+                  )}
+                  {recipe.fat && (
+                    <span className="bg-gray-200 px-2 py-1 rounded">
+                      {recipe.fat}g Fat
+                    </span>
+                  )}
+                </div>
+                <Link
+                  to={`/user-dashboard/menu/recipes/${recipe.id}`}
+                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                >
+                  View Recipe
+                </Link>
               </div>
-              <Link
-                to={`/user-dashboard/menu/recipes/${recipe.id}`}
-                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-              >
-                View Recipe
-              </Link>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
 export default Menu;
-
-
 
 
 

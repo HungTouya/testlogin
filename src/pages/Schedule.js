@@ -11,6 +11,7 @@ function Schedule() {
   const [editingMode, setEditingMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [editingMeal, setEditingMeal] = useState(null);
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const meals = ["Breakfast", "Lunch", "Dinner"];
@@ -76,12 +77,10 @@ function Schedule() {
             <td className="border border-gray-300 px-4 py-2 font-semibold bg-gray-200">{meal}</td>
             {days.map((day, j) => (
               <td key={j} className="border border-gray-300 px-4 py-2">
-                {editingMode && activeTab === "custom" ? (
+                {editingMode && activeTab === "custom" && editingMeal === `${day}-${meal}` ? (
                   <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search food..."
-                      className="border p-1 rounded w-full"
+                    <select
+                      className="border p-1 w-full"
                       value={customSchedule[day]?.[meal] || ""}
                       onChange={(e) => {
                         const updated = { ...customSchedule };
@@ -89,28 +88,26 @@ function Schedule() {
                         updated[day][meal] = e.target.value;
                         setCustomSchedule(updated);
                       }}
-                      onFocus={() => setSearchTerm("")}
-                    />
-                    <div className="absolute bg-white border max-h-40 overflow-y-auto w-full z-10">
+                    >
+                      <option value="">Select</option>
                       {filteredRecipes.map((r, idx) => (
-                        <div
-                          key={idx}
-                          className="px-2 py-1 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => {
-                            const updated = { ...customSchedule };
-                            if (!updated[day]) updated[day] = {};
-                            updated[day][meal] = r;
-                            setCustomSchedule(updated);
-                            setSearchTerm("");
-                          }}
-                        >
-                          {r}
-                        </div>
+                        <option key={idx} value={r}>{r}</option>
                       ))}
-                    </div>
+                    </select>
+                    <button 
+                      onClick={() => setEditingMeal(null)} 
+                      className="absolute top-1 right-1 text-red-500"
+                    >
+                      X
+                    </button>
                   </div>
                 ) : (
-                  data[day]?.[meal] || "-"
+                  <div 
+                    onClick={() => setEditingMeal(`${day}-${meal}`)} 
+                    className="cursor-pointer text-blue-500"
+                  >
+                    {data[day]?.[meal] || "-"}
+                  </div>
                 )}
               </td>
             ))}
@@ -195,9 +192,3 @@ function Schedule() {
 }
 
 export default Schedule;
-
-
-
-
-
-

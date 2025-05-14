@@ -7,18 +7,15 @@ function Home() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
-  const keywordSuggestions = [
-    "chicken",
-    "beef",
-    "shrimp",
-    "fish",
-    "pork",
-    "vegetarian",
-    "low-carb",
-    "high-protein",
-    "spicy",
-    "gluten-free",
-  ];
+const keywordSuggestions = [
+  "gà",
+  "bò",
+  "tôm",
+  "cá",
+  "heo",
+  "chay",
+];
+
 
   useEffect(() => {
     const fetchRecipes = async () => {

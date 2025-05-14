@@ -119,7 +119,7 @@ function Schedule() {
 
   return (
     <div className="min-h-screen bg-[#FFF8F1] p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Weekly Meal Schedule</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Lịch ăn hàng tuần</h1>
 
 <div className="flex justify-center gap-6 mb-6">
   <button

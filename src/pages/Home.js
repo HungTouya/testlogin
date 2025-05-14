@@ -57,9 +57,8 @@ function Home() {
         </h1>
       </div>
 
-      {/* Suggested keywords */}
       <div className="flex flex-col items-center mb-10 px-6">
-        <h2 className="text-2xl font-semibold mb-3 text-[#4E342E]">Suggested Keywords</h2>
+        <h2 className="text-2xl font-semibold mb-3 text-[#4E342E]">Từ khóa được đề xuất</h2>
         <div className="flex flex-wrap justify-center gap-3">
           {shuffleArray(keywordSuggestions)
             .slice(0, 5)
@@ -75,10 +74,9 @@ function Home() {
         </div>
       </div>
 
-      {/* Suggested Recipes */}
       <div className="w-full max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-semibold mb-3 text-center text-[#4E342E]">
-          Suggested Recipes
+          Công thức nấu ăn được đề xuất
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recipes.map((recipe) => (

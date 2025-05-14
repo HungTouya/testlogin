@@ -3,8 +3,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import AdminDashboard from "../pages/AdminDashboard";
-import PrivateRoute from "./PrivateRoute"; // ✅ Import PrivateRoute
-
+import PrivateRoute from "./PrivateRoute"; 
 function App() {
     return (
         <Router>
@@ -12,7 +11,6 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 
-                {/* ✅ Protected Routes */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/admin-dashboard" element={<AdminDashboard />} />

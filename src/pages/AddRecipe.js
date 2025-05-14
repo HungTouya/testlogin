@@ -21,7 +21,6 @@ function AddRecipe() {
   });
   const [image, setImage] = useState(null);
 
-  // Function to determine diabetes type suitability
   const determineDiabetesType = (kcal, carbs) => {
     const carbsValue = parseInt(carbs.replace("g", "").trim());
     const kcalValue = Number(kcal);
@@ -55,11 +54,9 @@ function AddRecipe() {
     const imageRef = ref(storage, `recipe-images/${Date.now()}-${image.name}`);
 
     try {
-      // Upload image to Firebase Storage
       await uploadBytes(imageRef, image);
       const imageUrl = await getDownloadURL(imageRef);
 
-      // Save recipe with image URL to Firestore
       await addDoc(collection(db, "recipes"), {
         name: recipe.name,
         kcal: Number(recipe.kcal),
@@ -96,7 +93,6 @@ function AddRecipe() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
-      {/* Back Button */}
       <button
         onClick={() => navigate("/admin-dashboard")}
         className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
@@ -183,7 +179,6 @@ function AddRecipe() {
           className="w-full p-3 border rounded mb-3"
         />
 
-        {/* Image Upload */}
         <input
           type="file"
           accept="image/*"
@@ -192,7 +187,6 @@ function AddRecipe() {
           className="w-full p-3 border rounded mb-3"
         />
 
-        {/* Display assigned diabetes type */}
         <p className="mb-3 font-semibold">
           Diabetes Type Recommendation:{" "}
           <span className="text-blue-600">

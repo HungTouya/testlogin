@@ -1,11 +1,10 @@
-/* Navbar Styling */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #FFA07A; /* Cam apricot cho navbar */
-    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
+    background-color: #FFA07A; 
+    color: #6F4F37; 
     padding: 1rem 2rem;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -14,14 +13,13 @@
     z-index: 1000;
 }
 
-/* Navigation Links */
 .nav-links {
     display: flex;
     gap: 1.5rem;
 }
 
 .nav-link {
-    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
+    color: #6F4F37; 
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -30,13 +28,12 @@
 }
 
 .nav-link:hover {
-    color: #0F3B82; /* Xanh đậm thay vì xanh lam sáng */
+    color: #0F3B82; 
     transform: scale(1.05);
 }
 
-/* Logout Button */
 .logout-button {
-    background-color: #6F4F37; /* Nâu sô cô la cho background */
+    background-color: #6F4F37; 
     color: white;
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
@@ -48,17 +45,16 @@
 }
 
 .logout-button:hover {
-    background-color: #FFA07A; /* Cam apricot cho background khi hover */
+    background-color: #FFA07A; 
     transform: scale(1.05);
 }
 
-/* Header & Section Layout */
 .header {
-    margin-top: 80px; /* Adjust for fixed navbar */
+    margin-top: 80px; 
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
-    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
+    color: #6F4F37; 
     padding: 1.5rem 0;
 }
 
@@ -72,7 +68,6 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;

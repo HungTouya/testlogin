@@ -56,7 +56,6 @@ function SearchBar() {
           Search
         </label>
 
-        {/* Search Input Field */}
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <svg
@@ -85,7 +84,6 @@ function SearchBar() {
             required
           />
 
-          {/* Search Button */}
           <button
             type="submit"
             className="absolute inset-y-0 right-1.5 my-auto px-2 py-1 h-8 text-xs font-medium text-white bg-[#EF7C59] rounded-md hover:bg-[#d66546] focus:ring-2 focus:outline-none focus:ring-[#EF7C59]"
@@ -95,7 +93,6 @@ function SearchBar() {
         </div>
       </form>
 
-      {/* Dropdown Suggestions */}
       {suggestions.length > 0 && (
         <ul className="absolute top-full left-0 mt-1 w-full bg-[#FFF6F0] border border-[#EF7C59] rounded-lg shadow-lg z-10">
           {suggestions.map((recipe) => (

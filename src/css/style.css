@@ -3,40 +3,40 @@
 body {  
     font-family: Arial, sans-serif;  
     background-color: #f4f4f4;  
-    height: 100vh; /* Ensure the body takes up full viewport height */  
+    height: 100vh; 
     display: flex;  
     justify-content: center;  
     align-items: center;  
     margin: 0;  
-    min-height: 100vh; /* Ensure body takes at least full height of viewport */
+    min-height: 100vh; 
 }  
 
 .form-container {  
     background-color: #fff;  
-    border: 2px solid #6F4F37; /* Nâu sô cô la cho border */
+    border: 2px solid #6F4F37; 
     border-radius: 8px;  
     padding: 20px;  
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  
-    width: 400px; /* Set a fixed width for the form */  
+    width: 400px; 
 }  
 
 form {  
     display: flex;  
-    flex-direction: column; /* Stack inputs vertically */  
+    flex-direction: column;   
 }  
 
 input {  
     padding: 10px;  
-    margin: 10px 0; /* Space between inputs */  
+    margin: 10px 0;   
     border: 1px solid #ccc;  
     border-radius: 4px;  
     font-size: 14px;  
-    transition: border-color 0.3s ease; /* Smooth transition on focus */
+    transition: border-color 0.3s ease; 
 }  
 
 input:focus {  
-    border-color: #FFA07A; /* Cam apricot cho đường viền khi focus */
-    outline: none; /* Remove default outline */
+    border-color: #FFA07A; 
+    outline: none; 
 }  
 
 button {  
@@ -44,15 +44,15 @@ button {
     margin-top: 10px;  
     border: none;  
     border-radius: 4px;  
-    background-color: #FFA07A; /* Cam apricot cho màu nền button */
+    background-color: #FFA07A;
     color: white;  
     font-size: 16px;  
     cursor: pointer;  
-    transition: background-color 0.3s ease; /* Smooth transition on hover */
+    transition: background-color 0.3s ease; 
 }  
 
 button:hover {  
-    background-color: #6F4F37; /* Nâu sô cô la cho button hover */
+    background-color: #6F4F37; 
 }  
 
 .error {  

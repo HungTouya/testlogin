@@ -1,26 +1,72 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import WarningModal from "../comp/WarningModal";  // Import modal cảnh báo
 
 function RecipePage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
+  const [showWarning, setShowWarning] = useState(false);
+  const [alternativeRecipes, setAlternativeRecipes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipe = async () => {
       if (!id) return;
+
       const recipeDoc = await getDoc(doc(db, "recipes", id));
-      if (recipeDoc.exists()) {
-        setRecipe(recipeDoc.data());
-      } else {
-        setRecipe(null);
+      if (!recipeDoc.exists()) return;
+
+      const recipeData = recipeDoc.data();
+      setRecipe(recipeData);
+
+      const userTypeRaw = localStorage.getItem("diabetesType") || "None"; // e.g. "1", "2", "None"
+      const mapUserType = {
+        "1": "Type1",
+        "2": "Type2",
+        "None": "None"
+      };
+      const userType = mapUserType[userTypeRaw];
+
+      // Cảnh báo nếu người dùng là Type1/Type2 mà món ăn là None
+      if (
+        userType !== "None" &&
+        recipeData.diabetesType === "None"
+      ) {
+        setShowWarning(true);
+        fetchAlternatives(userType);  // Lấy món thay thế
       }
+    };
+
+    const fetchAlternatives = async (userType) => {
+      const snapshot = await getDocs(collection(db, "recipes"));
+      const alternatives = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(r => r.diabetesType === userType);  // Tìm món thay thế theo loại tiểu đường của người dùng
+      setAlternativeRecipes(alternatives);
     };
 
     fetchRecipe();
   }, [id]);
+
+  const handleContinue = () => {
+    setShowWarning(false);  // Tiếp tục khi người dùng chấp nhận
+  };
+
+  const handleBack = () => {
+    navigate("/user-dashboard/menu");  // Quay lại menu
+  };
+
+  const handleSuggestAlternative = () => {
+    if (alternativeRecipes.length > 0) {
+      const random = alternativeRecipes[Math.floor(Math.random() * alternativeRecipes.length)];
+      navigate(`/user-dashboard/menu/recipes/${random.id}`);  // Điều hướng đến món thay thế ngẫu nhiên
+    } else {
+      alert("Không tìm thấy món thay thế phù hợp.");
+      setShowWarning(false);
+    }
+  };
 
   if (!recipe) return <p className="text-center text-gray-500 mt-6">Recipe not found.</p>;
 
@@ -41,18 +87,22 @@ function RecipePage() {
         <p className="mb-2"><strong>Carbohydrates:</strong> {recipe.carbohydrates}</p>
         <p className="mb-2"><strong>Fat:</strong> {recipe.fat} g</p>
         <p className="mb-2"><strong>Protein:</strong> {recipe.protein} g</p>
-        <p className="mb-2"><strong>Ingredients:</strong> {recipe.ingredients.join(", ")}</p>
+        <p className="mb-2"><strong>Ingredients:</strong> {recipe.ingredients?.join(", ")}</p>
         <p className="mb-2"><strong>Cooking Instructions:</strong> {recipe.cookingInstructions}</p>
-        {recipe.tip && (
-          <p className="mb-2"><strong>Tip:</strong> {recipe.tip}</p>
-        )}
+        {recipe.tip && <p className="mb-2"><strong>Tip:</strong> {recipe.tip}</p>}
       </div>
+
+      {/* Hiển thị modal cảnh báo nếu cần */}
+      {showWarning && (
+        <WarningModal 
+          onContinue={handleContinue}
+          onBack={handleBack}
+          onSuggestAlternative={handleSuggestAlternative}
+        />
+      )}
     </div>
   );
 }
 
 export default RecipePage;
-
-
-
 

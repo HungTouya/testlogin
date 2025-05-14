@@ -43,6 +43,8 @@ function RecipePage() {
       const alternatives = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .filter(r => r.diabetesType === userType);  
+
+      setAlternativeRecipes(alternatives); // 🔧 Thêm dòng này
     };
 
     fetchRecipe();

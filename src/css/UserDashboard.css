@@ -4,8 +4,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #FAECD2;
-    color: #4e342e;
+    background-color: #FFA07A; /* Cam apricot cho navbar */
+    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
     padding: 1rem 2rem;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -21,7 +21,7 @@
 }
 
 .nav-link {
-    color: #4e342e;
+    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -30,13 +30,13 @@
 }
 
 .nav-link:hover {
-    color: #1347A3;
+    color: #0F3B82; /* Xanh đậm thay vì xanh lam sáng */
     transform: scale(1.05);
 }
 
 /* Logout Button */
 .logout-button {
-    background-color: #1347A3;
+    background-color: #6F4F37; /* Nâu sô cô la cho background */
     color: white;
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
@@ -48,7 +48,7 @@
 }
 
 .logout-button:hover {
-    background-color: #0f3b82;
+    background-color: #FFA07A; /* Cam apricot cho background khi hover */
     transform: scale(1.05);
 }
 
@@ -58,7 +58,7 @@
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
-    color: #4e342e;
+    color: #6F4F37; /* Nâu sô cô la cho màu chữ */
     padding: 1.5rem 0;
 }
 
@@ -84,6 +84,7 @@
         gap: 1rem;
     }
 }
+
 
 
 

@@ -49,7 +49,7 @@ function Navbar() {
                 {/* Right: Logout Button */}
                 <button 
                     onClick={handleLogout} 
-                    className="bg-[#1347A3] text-white py-2 px-4 rounded-md hover:bg-[#0f3b82]"
+                    className="bg-[#FFA07A] text-white py-2 px-4 rounded-md hover:bg-[#6F4F37]"
                 >
                     Logout
                 </button>

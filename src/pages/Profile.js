@@ -154,13 +154,13 @@ function Profile() {
       <div className="max-w-4xl mx-auto mt-6">
         <div className="bg-white shadow-lg rounded-lg p-4 flex justify-center gap-6">
           <button
-            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "profile" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-500"}`}
+            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "profile" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
             onClick={() => setActiveTab("profile")}
           >
             My Profile
           </button>
           <button
-            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "flavor" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-500"}`}
+            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "flavor" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
             onClick={() => setActiveTab("flavor")}
           >
             Flavor & Health
@@ -196,7 +196,6 @@ function Profile() {
 }
 
 export default Profile;
-
 
 
 

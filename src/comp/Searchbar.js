@@ -9,7 +9,6 @@ function SearchBar() {
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch recipes from Firestore when component mounts
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
@@ -26,7 +25,6 @@ function SearchBar() {
     fetchRecipes();
   }, []);
 
-  // Filter recipes based on user query
   useEffect(() => {
     if (query.trim() === "") {
       setSuggestions([]);
@@ -38,7 +36,6 @@ function SearchBar() {
     }
   }, [query, recipes]);
 
-  // Handle form submission (e.g., if only one suggestion is available)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (suggestions.length === 1) {
@@ -46,7 +43,6 @@ function SearchBar() {
     }
   };
 
-  // Navigate to recipe page on suggestion click
   const handleSuggestionClick = (id) => {
     navigate(`/user-dashboard/menu/recipes/${id}`);
     setQuery("");
@@ -59,11 +55,12 @@ function SearchBar() {
         <label htmlFor="search" className="sr-only">
           Search
         </label>
+
+        {/* Search Input Field */}
         <div className="relative w-full">
-          {/* Search Icon */}
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              className="w-4 h-4 text-[#A1887F]"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 20 20"
@@ -78,13 +75,12 @@ function SearchBar() {
             </svg>
           </div>
 
-          {/* Search Input */}
           <input
             type="search"
             id="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="block w-[250px] md:w-[300px] lg:w-[350px] p-2.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-[250px] md:w-[300px] lg:w-[350px] p-2.5 pl-10 text-sm text-[#4E342E] border border-[#EF7C59] rounded-lg bg-[#FFF6F0] placeholder-[#A1887F] focus:ring-[#EF7C59] focus:border-[#EF7C59]"
             placeholder="Search recipes..."
             required
           />
@@ -92,21 +88,21 @@ function SearchBar() {
           {/* Search Button */}
           <button
             type="submit"
-            className="absolute inset-y-0 right-1.5 my-auto px-2 py-1 h-8 w-15 text-xs font-medium text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="absolute inset-y-0 right-1.5 my-auto px-2 py-1 h-8 text-xs font-medium text-white bg-[#EF7C59] rounded-md hover:bg-[#d66546] focus:ring-2 focus:outline-none focus:ring-[#EF7C59]"
           >
             Search
           </button>
         </div>
       </form>
 
-      {/* Suggestions Dropdown */}
+      {/* Dropdown Suggestions */}
       {suggestions.length > 0 && (
-        <ul className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 z-10">
+        <ul className="absolute top-full left-0 mt-1 w-full bg-[#FFF6F0] border border-[#EF7C59] rounded-lg shadow-lg z-10">
           {suggestions.map((recipe) => (
             <li
               key={recipe.id}
               onClick={() => handleSuggestionClick(recipe.id)}
-              className="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="p-2 cursor-pointer text-[#4E342E] hover:bg-[#FFE0D2]"
             >
               {recipe.name}
             </li>

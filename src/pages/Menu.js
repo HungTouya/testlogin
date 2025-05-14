@@ -72,13 +72,13 @@ function Menu() {
     : recipes;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      {/* Header + Filters (fixed height) */}
-      <div className="p-6 flex-shrink-0 bg-gray-100 z-10">
-        <h1 className="text-3xl font-bold text-center mb-6">Menu</h1>
+    <div className="h-screen flex flex-col bg-[#FFF6F0]">
+      {/* Header + Filters */}
+      <div className="p-6 flex-shrink-0 z-10">
+        <h1 className="text-3xl font-bold text-center mb-6 text-[#4E342E]">Menu</h1>
         <div className="flex flex-wrap justify-center gap-4">
           <select
-            className="bg-white border rounded px-4 py-2 text-gray-700"
+            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E] placeholder-[#A1887F]"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
           >
@@ -98,14 +98,14 @@ function Menu() {
           <input
             type="text"
             placeholder="Filter by ingredient (e.g., beef)"
-            className="bg-white border rounded px-4 py-2 text-gray-700"
+            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E] placeholder-[#A1887F]"
             value={selectedIngredient}
             onChange={(e) => setSelectedIngredient(e.target.value)}
           />
         </div>
       </div>
 
-      {/* Scrollable Recipe List */}
+      {/* Recipe List */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortRecipes(filteredRecipes, sortOption).map((recipe) => (
@@ -121,35 +121,35 @@ function Menu() {
                 />
               )}
               <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{recipe.name}</h2>
+                <h2 className="text-xl font-semibold mb-2 text-[#4E342E]">{recipe.name}</h2>
                 {recipe.description && (
-                  <p className="text-gray-600 mb-4">{recipe.description}</p>
+                  <p className="text-[#4E342E] mb-4">{recipe.description}</p>
                 )}
                 <div className="flex flex-wrap gap-2 text-xs mb-4">
                   {recipe.kcal && (
-                    <span className="bg-gray-200 px-2 py-1 rounded">
+                    <span className="bg-[#FFE0D2] px-2 py-1 rounded text-[#4E342E]">
                       {recipe.kcal} kcal
                     </span>
                   )}
                   {recipe.carbohydrates && (
-                    <span className="bg-gray-200 px-2 py-1 rounded">
+                    <span className="bg-[#FFE0D2] px-2 py-1 rounded text-[#4E342E]">
                       {recipe.carbohydrates}g Carbs
                     </span>
                   )}
                   {recipe.protein && (
-                    <span className="bg-gray-200 px-2 py-1 rounded">
+                    <span className="bg-[#FFE0D2] px-2 py-1 rounded text-[#4E342E]">
                       {recipe.protein}g Protein
                     </span>
                   )}
                   {recipe.fat && (
-                    <span className="bg-gray-200 px-2 py-1 rounded">
+                    <span className="bg-[#FFE0D2] px-2 py-1 rounded text-[#4E342E]">
                       {recipe.fat}g Fat
                     </span>
                   )}
                 </div>
                 <Link
                   to={`/user-dashboard/menu/recipes/${recipe.id}`}
-                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                  className="bg-[#EF7C59] text-white py-2 px-4 rounded hover:bg-[#d66546] inline-block"
                 >
                   View Recipe
                 </Link>
@@ -163,6 +163,7 @@ function Menu() {
 }
 
 export default Menu;
+
 
 
 

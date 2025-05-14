@@ -73,7 +73,6 @@ function Menu() {
 
   return (
     <div className="h-screen flex flex-col bg-[#FFF6F0]">
-      {/* Header + Filters */}
       <div className="p-6 flex-shrink-0 z-10">
         <h1 className="text-3xl font-bold text-center mb-6 text-[#4E342E]">Menu</h1>
         <div className="flex flex-wrap justify-center gap-4">
@@ -105,7 +104,6 @@ function Menu() {
         </div>
       </div>
 
-      {/* Recipe List */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortRecipes(filteredRecipes, sortOption).map((recipe) => (

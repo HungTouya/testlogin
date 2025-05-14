@@ -36,8 +36,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF6F0]"> {/* Nền cam be rất nhạt */}
-      {/* Banner title with background image */}
+    <div className="min-h-screen bg-[#FFF6F0]"> 
       <div
         className="w-full flex items-center justify-center bg-cover bg-center h-64 mb-10"
         style={{
@@ -47,8 +46,8 @@ function Home() {
         <h1
           className="text-6xl font-extrabold drop-shadow-xl"
           style={{
-            color: "#4E342E", // Nâu chocolate
-            backgroundColor: "rgba(255, 243, 233, 0.9)", // Cam be nhạt
+            color: "#4E342E", 
+            backgroundColor: "rgba(255, 243, 233, 0.9)", 
             padding: "0.6em 1.2em",
             borderRadius: "1.5rem",
           }}

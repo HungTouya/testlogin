@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const quizQuestions = [
   {
-    question: "What type of diabetes do you have?",
+    question: "Bạn bị tiểu đường loại mấy?",
     options: [
       { value: "none", label: "None" },
       { value: "1", label: "Type 1" },
@@ -12,7 +12,7 @@ const quizQuestions = [
     ]
   },
   {
-    question: "What are your favorite flavors?",
+    question: "Bạn thích vị gì?",
     options: [
       { value: "Sweet", label: "Sweet" },
       { value: "Spicy", label: "Spicy" },
@@ -64,8 +64,8 @@ function Profile() {
         await updateDoc(userRef, { 
           name: updatedData.name, 
           phone: updatedData.phone,
-          diabetesType,  // Cập nhật loại bệnh tiểu đường
-          favoriteFlavors // Cập nhật sở thích
+          diabetesType,  
+          favoriteFlavors 
         });
         setUserData({ ...userData, name: updatedData.name, phone: updatedData.phone });
         setEditing(false);

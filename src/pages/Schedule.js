@@ -177,7 +177,6 @@ function Schedule() {
         </div>
       )}
 
-      {/* Dialogflow chat appears only in custom tab */}
       {activeTab === "custom" && (
         <div className="fixed bottom-4 right-4 z-50">
           <df-messenger

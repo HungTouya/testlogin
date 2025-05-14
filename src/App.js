@@ -39,7 +39,6 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/user-dashboard/*" element={user && role !== "admin" ? <UserDashboard /> : <Login />} />
 
-                    {/* Admin Routes */}
                     <Route path="/admin-dashboard" element={user && role === "admin" ? <AdminDashboard /> : <Login />} />
                     <Route path="/admin-dashboard/add-recipe" element={user && role === "admin" ? <AddRecipe /> : <Login />} />
                     <Route path="/admin-dashboard/add-schedule" element={user && role === "admin" ? <AddSchedule /> : <Login />} />

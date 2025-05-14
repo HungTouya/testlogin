@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import WarningModal from "../comp/WarningModal";  // Import modal cảnh báo
+import WarningModal from "../comp/WarningModal";  
 
 function RecipePage() {
   const { id } = useParams();
@@ -21,7 +21,7 @@ function RecipePage() {
       const recipeData = recipeDoc.data();
       setRecipe(recipeData);
 
-      const userTypeRaw = localStorage.getItem("diabetesType") || "None"; // e.g. "1", "2", "None"
+      const userTypeRaw = localStorage.getItem("diabetesType") || "None"; 
       const mapUserType = {
         "1": "Type1",
         "2": "Type2",
@@ -29,13 +29,12 @@ function RecipePage() {
       };
       const userType = mapUserType[userTypeRaw];
 
-      // Cảnh báo nếu người dùng là Type1/Type2 mà món ăn là None
       if (
         userType !== "None" &&
         recipeData.diabetesType === "None"
       ) {
         setShowWarning(true);
-        fetchAlternatives(userType);  // Lấy món thay thế
+        fetchAlternatives(userType);  
       }
     };
 
@@ -43,25 +42,24 @@ function RecipePage() {
       const snapshot = await getDocs(collection(db, "recipes"));
       const alternatives = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(r => r.diabetesType === userType);  // Tìm món thay thế theo loại tiểu đường của người dùng
-      setAlternativeRecipes(alternatives);
+        .filter(r => r.diabetesType === userType);  
     };
 
     fetchRecipe();
   }, [id]);
 
   const handleContinue = () => {
-    setShowWarning(false);  // Tiếp tục khi người dùng chấp nhận
+    setShowWarning(false);  
   };
 
   const handleBack = () => {
-    navigate("/user-dashboard/menu");  // Quay lại menu
+    navigate("/user-dashboard/menu");  
   };
 
   const handleSuggestAlternative = () => {
     if (alternativeRecipes.length > 0) {
       const random = alternativeRecipes[Math.floor(Math.random() * alternativeRecipes.length)];
-      navigate(`/user-dashboard/menu/recipes/${random.id}`);  // Điều hướng đến món thay thế ngẫu nhiên
+      navigate(`/user-dashboard/menu/recipes/${random.id}`);
     } else {
       alert("Không tìm thấy món thay thế phù hợp.");
       setShowWarning(false);
@@ -92,7 +90,6 @@ function RecipePage() {
         {recipe.tip && <p className="mb-2"><strong>Tip:</strong> {recipe.tip}</p>}
       </div>
 
-      {/* Hiển thị modal cảnh báo nếu cần */}
       {showWarning && (
         <WarningModal 
           onContinue={handleContinue}

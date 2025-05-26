@@ -1,72 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import WarningModal from "../comp/WarningModal";  
+import { doc, getDoc } from "firebase/firestore";
 
 function RecipePage() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const [showWarning, setShowWarning] = useState(false);
-  const [alternativeRecipes, setAlternativeRecipes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipe = async () => {
       if (!id) return;
-
       const recipeDoc = await getDoc(doc(db, "recipes", id));
-      if (!recipeDoc.exists()) return;
-
-      const recipeData = recipeDoc.data();
-      setRecipe(recipeData);
-
-      const userTypeRaw = localStorage.getItem("diabetesType") || "None"; 
-      const mapUserType = {
-        "1": "Type1",
-        "2": "Type2",
-        "None": "None"
-      };
-      const userType = mapUserType[userTypeRaw];
-
-      if (
-        userType !== "None" &&
-        recipeData.diabetesType === "None"
-      ) {
-        setShowWarning(true);
-        fetchAlternatives(userType);  
+      if (recipeDoc.exists()) {
+        setRecipe(recipeDoc.data());
+      } else {
+        setRecipe(null);
       }
-    };
-
-    const fetchAlternatives = async (userType) => {
-      const snapshot = await getDocs(collection(db, "recipes"));
-      const alternatives = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(r => r.diabetesType === userType);  
-
-      setAlternativeRecipes(alternatives); // 🔧 Thêm dòng này
     };
 
     fetchRecipe();
   }, [id]);
-
-  const handleContinue = () => {
-    setShowWarning(false);  
-  };
-
-  const handleBack = () => {
-    navigate("/user-dashboard/menu");  
-  };
-
-  const handleSuggestAlternative = () => {
-    if (alternativeRecipes.length > 0) {
-      const random = alternativeRecipes[Math.floor(Math.random() * alternativeRecipes.length)];
-      navigate(`/user-dashboard/menu/recipes/${random.id}`);
-    } else {
-      alert("Không tìm thấy món thay thế phù hợp.");
-      setShowWarning(false);
-    }
-  };
 
   if (!recipe) return <p className="text-center text-gray-500 mt-6">Recipe not found.</p>;
 
@@ -87,21 +41,17 @@ function RecipePage() {
         <p className="mb-2"><strong>Carbohydrates:</strong> {recipe.carbohydrates}</p>
         <p className="mb-2"><strong>Fat:</strong> {recipe.fat} g</p>
         <p className="mb-2"><strong>Protein:</strong> {recipe.protein} g</p>
-        <p className="mb-2"><strong>Ingredients:</strong> {recipe.ingredients?.join(", ")}</p>
-        <p className="mb-2"><strong>Cooking Instructions:</strong> {recipe.cookingInstructions}</p>
-        {recipe.tip && <p className="mb-2"><strong>Tip:</strong> {recipe.tip}</p>}
+        <p className="mb-2"><strong>Nguyên Liệu:</strong> {recipe.ingredients.join(", ")}</p>
+        <p className="mb-2"><strong>Công thức:</strong> {recipe.cookingInstructions}</p>
+        {recipe.tip && (
+          <p className="mb-2"><strong>Tip:</strong> {recipe.tip}</p>
+        )}
       </div>
-
-      {showWarning && (
-        <WarningModal 
-          onContinue={handleContinue}
-          onBack={handleBack}
-          onSuggestAlternative={handleSuggestAlternative}
-        />
-      )}
     </div>
   );
 }
 
 export default RecipePage;
+
+
 

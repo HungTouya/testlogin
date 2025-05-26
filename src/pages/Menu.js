@@ -13,63 +13,44 @@ function Menu() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const querySnapshot = await getDocs(collection(db, "recipes"));
-      let recipesList = querySnapshot.docs.map((doc) => ({
+      const snapshot = await getDocs(collection(db, "recipes"));
+      const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+      setRecipes(data);
       if (filterKeyword) {
-        recipesList = recipesList.filter((recipe) =>
-          recipe.ingredients?.some((ingredient) =>
-            ingredient.toLowerCase().includes(filterKeyword.toLowerCase())
-          )
-        );
         setSelectedIngredient(filterKeyword);
       }
-
-      setRecipes(recipesList);
     };
-
     fetchRecipes();
   }, [filterKeyword]);
 
-  const sortRecipes = (recipes, option) => {
-    let sorted = [...recipes];
-
+  const handleSort = (recipes, option) => {
+    const sorted = [...recipes];
     switch (option) {
-      case "name-asc":
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case "name-desc":
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      case "kcal-asc":
-        return sorted.sort((a, b) => (a.kcal || 0) - (b.kcal || 0));
-      case "kcal-desc":
-        return sorted.sort((a, b) => (b.kcal || 0) - (a.kcal || 0));
-      case "carbs-asc":
-        return sorted.sort((a, b) => (a.carbohydrates || 0) - (b.carbohydrates || 0));
-      case "carbs-desc":
-        return sorted.sort((a, b) => (b.carbohydrates || 0) - (a.carbohydrates || 0));
-      case "protein-asc":
-        return sorted.sort((a, b) => (a.protein || 0) - (b.protein || 0));
-      case "protein-desc":
-        return sorted.sort((a, b) => (b.protein || 0) - (a.protein || 0));
-      case "fat-asc":
-        return sorted.sort((a, b) => (a.fat || 0) - (b.fat || 0));
-      case "fat-desc":
-        return sorted.sort((a, b) => (b.fat || 0) - (a.fat || 0));
-      default:
-        return sorted;
+      case "name-asc": return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc": return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case "kcal-asc": return sorted.sort((a, b) => (a.kcal || 0) - (b.kcal || 0));
+      case "kcal-desc": return sorted.sort((a, b) => (b.kcal || 0) - (a.kcal || 0));
+      case "carbs-asc": return sorted.sort((a, b) => (a.carbohydrates || 0) - (b.carbohydrates || 0));
+      case "carbs-desc": return sorted.sort((a, b) => (b.carbohydrates || 0) - (a.carbohydrates || 0));
+      case "protein-asc": return sorted.sort((a, b) => (a.protein || 0) - (b.protein || 0));
+      case "protein-desc": return sorted.sort((a, b) => (b.protein || 0) - (a.protein || 0));
+      case "fat-asc": return sorted.sort((a, b) => (a.fat || 0) - (b.fat || 0));
+      case "fat-desc": return sorted.sort((a, b) => (b.fat || 0) - (a.fat || 0));
+      default: return sorted;
     }
   };
 
-  const filteredRecipes = selectedIngredient
-    ? recipes.filter((recipe) =>
-        recipe.ingredients?.some((ingredient) =>
-          ingredient.toLowerCase().includes(selectedIngredient.toLowerCase())
-        )
-      )
-    : recipes;
+  const filtered = recipes.filter(recipe =>
+    selectedIngredient === "" ||
+    recipe.ingredients?.some(ing =>
+      ing.toLowerCase().includes(selectedIngredient.toLowerCase())
+    )
+  );
+
+  const sortedRecipes = handleSort(filtered, sortOption);
 
   return (
     <div className="h-screen flex flex-col bg-[#FFF6F0]">
@@ -77,7 +58,7 @@ function Menu() {
         <h1 className="text-3xl font-bold text-center mb-6 text-[#4E342E]">Menu</h1>
         <div className="flex flex-wrap justify-center gap-4">
           <select
-            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E] placeholder-[#A1887F]"
+            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E]"
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
           >
@@ -97,7 +78,7 @@ function Menu() {
           <input
             type="text"
             placeholder="Filter by ingredient (e.g., beef)"
-            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E] placeholder-[#A1887F]"
+            className="bg-[#FFF6F0] border border-[#EF7C59] rounded px-4 py-2 text-[#4E342E]"
             value={selectedIngredient}
             onChange={(e) => setSelectedIngredient(e.target.value)}
           />
@@ -106,7 +87,7 @@ function Menu() {
 
       <div className="flex-1 overflow-y-auto p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortRecipes(filteredRecipes, sortOption).map((recipe) => (
+          {sortedRecipes.map((recipe) => (
             <div
               key={recipe.id}
               className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
@@ -161,6 +142,7 @@ function Menu() {
 }
 
 export default Menu;
+
 
 
 

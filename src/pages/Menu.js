@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { useLocation, useNavigate } from "react-router-dom";
+import { db, auth } from "../firebase";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
 function Menu() {
   const [recipes, setRecipes] = useState([]);
@@ -9,12 +9,13 @@ function Menu() {
   const [selectedIngredient, setSelectedIngredient] = useState("");
 
   const location = useLocation();
+  const navigate = useNavigate();
   const filterKeyword = location.state?.keyword || "";
 
   useEffect(() => {
     const fetchRecipes = async () => {
       const snapshot = await getDocs(collection(db, "recipes"));
-      const data = snapshot.docs.map(doc => ({
+      const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -29,28 +30,73 @@ function Menu() {
   const handleSort = (recipes, option) => {
     const sorted = [...recipes];
     switch (option) {
-      case "name-asc": return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case "name-desc": return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      case "kcal-asc": return sorted.sort((a, b) => (a.kcal || 0) - (b.kcal || 0));
-      case "kcal-desc": return sorted.sort((a, b) => (b.kcal || 0) - (a.kcal || 0));
-      case "carbs-asc": return sorted.sort((a, b) => (a.carbohydrates || 0) - (b.carbohydrates || 0));
-      case "carbs-desc": return sorted.sort((a, b) => (b.carbohydrates || 0) - (a.carbohydrates || 0));
-      case "protein-asc": return sorted.sort((a, b) => (a.protein || 0) - (b.protein || 0));
-      case "protein-desc": return sorted.sort((a, b) => (b.protein || 0) - (a.protein || 0));
-      case "fat-asc": return sorted.sort((a, b) => (a.fat || 0) - (b.fat || 0));
-      case "fat-desc": return sorted.sort((a, b) => (b.fat || 0) - (a.fat || 0));
-      default: return sorted;
+      case "name-asc":
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc":
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case "kcal-asc":
+        return sorted.sort((a, b) => (a.kcal || 0) - (b.kcal || 0));
+      case "kcal-desc":
+        return sorted.sort((a, b) => (b.kcal || 0) - (a.kcal || 0));
+      case "carbs-asc":
+        return sorted.sort((a, b) => (a.carbohydrates || 0) - (b.carbohydrates || 0));
+      case "carbs-desc":
+        return sorted.sort((a, b) => (b.carbohydrates || 0) - (a.carbohydrates || 0));
+      case "protein-asc":
+        return sorted.sort((a, b) => (a.protein || 0) - (b.protein || 0));
+      case "protein-desc":
+        return sorted.sort((a, b) => (b.protein || 0) - (a.protein || 0));
+      case "fat-asc":
+        return sorted.sort((a, b) => (a.fat || 0) - (b.fat || 0));
+      case "fat-desc":
+        return sorted.sort((a, b) => (b.fat || 0) - (a.fat || 0));
+      default:
+        return sorted;
     }
   };
 
-  const filtered = recipes.filter(recipe =>
-    selectedIngredient === "" ||
-    recipe.ingredients?.some(ing =>
-      ing.toLowerCase().includes(selectedIngredient.toLowerCase())
-    )
+  const filtered = recipes.filter(
+    (recipe) =>
+      selectedIngredient === "" ||
+      recipe.ingredients?.some((ing) =>
+        ing.toLowerCase().includes(selectedIngredient.toLowerCase())
+      )
   );
 
   const sortedRecipes = handleSort(filtered, sortOption);
+
+  const handleViewRecipe = async (recipe) => {
+    if (!auth.currentUser) {
+      alert("Bạn cần đăng nhập để xem công thức.");
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "customersData", auth.currentUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        alert("Không tìm thấy thông tin người dùng.");
+        return;
+      }
+
+      const userData = userSnap.data();
+      const userDiabetesType = userData.diabetesType?.toLowerCase() || "none";
+      const recipeDiabetesType = recipe.diabetesType?.toLowerCase() || "";
+
+      if (recipeDiabetesType === "none" && userDiabetesType !== "none") {
+        const confirmMessage = `Công thức này dành cho người tiểu đường loại: ${recipe.diabetesType}. Bạn có muốn tiếp tục không?`;
+        if (window.confirm(confirmMessage)) {
+          navigate(`/user-dashboard/menu/recipes/${recipe.id}`);
+        }
+      } else {
+        navigate(`/user-dashboard/menu/recipes/${recipe.id}`);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+      alert("Đã có lỗi xảy ra, vui lòng thử lại.");
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col bg-[#FFF6F0]">
@@ -126,12 +172,12 @@ function Menu() {
                     </span>
                   )}
                 </div>
-                <Link
-                  to={`/user-dashboard/menu/recipes/${recipe.id}`}
+                <button
+                  onClick={() => handleViewRecipe(recipe)}
                   className="bg-[#EF7C59] text-white py-2 px-4 rounded hover:bg-[#d66546] inline-block"
                 >
                   View Recipe
-                </Link>
+                </button>
               </div>
             </div>
           ))}

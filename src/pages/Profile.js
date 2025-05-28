@@ -159,7 +159,7 @@ function Profile() {
             className={`px-4 py-2 rounded-lg font-medium ${activeTab === "profile" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
             onClick={() => setActiveTab("profile")}
           >
-            My Profile
+            Profile
           </button>
           <button
             className={`px-4 py-2 rounded-lg font-medium ${activeTab === "flavor" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}

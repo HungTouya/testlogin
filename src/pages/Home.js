@@ -40,7 +40,7 @@ function Home() {
       <div
         className="w-full flex items-center justify-center bg-cover bg-center h-64 mb-10"
         style={{
-          backgroundImage: "url('/BeFunky-collage-1200x676-4.jpg')",
+          backgroundImage: "url('/Home.jpg')",
         }}
       >
         <h1

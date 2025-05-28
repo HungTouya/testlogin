@@ -92,15 +92,15 @@ function AddRecipe() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-[#FFF5F0] p-6 flex flex-col items-center">
       <button
         onClick={() => navigate("/admin-dashboard")}
-        className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
+        className="flex items-center text-[#6F4F37] hover:text-[#5c3f2e] mb-4 font-medium"
       >
         <FaArrowLeft className="mr-2" /> Back to Admin Dashboard
       </button>
 
-      <h2 className="text-3xl font-bold mb-6">Add New Recipe</h2>
+      <h2 className="text-3xl font-bold mb-6 text-[#6F4F37]">Add New Recipe</h2>
 
       <form
         onSubmit={handleSubmit}
@@ -113,7 +113,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Recipe Name"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
           type="number"
@@ -122,7 +122,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Calories (kcal)"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
           type="text"
@@ -131,7 +131,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Carbohydrates (e.g., 40g)"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
           type="text"
@@ -140,7 +140,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Fat (g)"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
           type="text"
@@ -149,9 +149,8 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Protein (g)"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
-
         <input
           type="text"
           name="ingredients"
@@ -159,7 +158,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Ingredients (comma-separated)"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <textarea
           name="cookingInstructions"
@@ -167,7 +166,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Cooking Instructions"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
           type="text"
@@ -176,7 +175,7 @@ function AddRecipe() {
           onChange={handleChange}
           placeholder="Tip"
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
 
         <input
@@ -184,12 +183,12 @@ function AddRecipe() {
           accept="image/*"
           onChange={handleImageChange}
           required
-          className="w-full p-3 border rounded mb-3"
+          className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
 
-        <p className="mb-3 font-semibold">
+        <p className="mb-3 font-semibold text-[#6F4F37]">
           Diabetes Type Recommendation:{" "}
-          <span className="text-blue-600">
+          <span className="text-[#FFA07A]">
             {determineDiabetesType(recipe.kcal, recipe.carbohydrates)}
           </span>
         </p>
@@ -197,7 +196,7 @@ function AddRecipe() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-500 text-white px-4 py-3 rounded w-full hover:bg-blue-600"
+          className="bg-[#FFA07A] text-white px-4 py-3 rounded w-full hover:bg-[#ff8c66] transition-colors"
         >
           {loading ? "Adding..." : "Add Recipe"}
         </button>
@@ -207,5 +206,6 @@ function AddRecipe() {
 }
 
 export default AddRecipe;
+
 
 

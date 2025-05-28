@@ -41,7 +41,9 @@ function Register() {
                 role: "user",
             });
 
-            navigate("/profile");
+            window.alert("Account created successfully!");
+            navigate("/login");
+
         } catch (err) {
             setError(err.message);
         }
@@ -96,6 +98,7 @@ function Register() {
 }
 
 export default Register;
+
 
 
 

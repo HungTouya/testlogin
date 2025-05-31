@@ -5,6 +5,7 @@ import Menu from "./Menu";
 import Schedule from "./Schedule";
 import Profile from "./Profile";
 import RecipePage from "./RecipePage";
+import AltRecipePage from "./AltRecipePage";  
 import Navbar from "../comp/Navbar";
 import "../css/UserDashboard.css";
 
@@ -20,6 +21,7 @@ function UserDashboard() {
                     <Route path="schedule" element={<Schedule />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="menu/recipes/:id" element={<RecipePage />} />
+                    <Route path="menu/altRecipes/:id" element={<AltRecipePage />} />  
                 </Routes>
             </div>
         </div>
@@ -27,6 +29,7 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
+
 
 
 

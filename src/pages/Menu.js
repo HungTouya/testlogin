@@ -66,37 +66,56 @@ function Menu() {
   const sortedRecipes = handleSort(filtered, sortOption);
 
   const handleViewRecipe = async (recipe) => {
-    if (!auth.currentUser) {
-      alert("Bạn cần đăng nhập để xem công thức.");
+  if (!auth.currentUser) {
+    alert("Bạn cần đăng nhập để xem công thức.");
+    return;
+  }
+
+  try {
+    const userRef = doc(db, "customersData", auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      alert("Không tìm thấy thông tin người dùng.");
       return;
     }
 
-    try {
-      const userRef = doc(db, "customersData", auth.currentUser.uid);
-      const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+    const userDiabetesType = userData.diabetesType?.toLowerCase() || "none";
+    const recipeDiabetesType = recipe.diabetesType?.toLowerCase() || "";
 
-      if (!userSnap.exists()) {
-        alert("Không tìm thấy thông tin người dùng.");
+    if (recipeDiabetesType === "none" && userDiabetesType !== "none") {
+      let choice = window.prompt(
+        "Công thức này không phù hợp cho người tiểu đường.\n" +
+        "Nhập:\n" +
+        "'alt' để xem phiên bản phù hợp,\n" +
+        "'yes' để tiếp tục xem công thức gốc,\n" +
+        "'no' để quay lại menu."
+      );
+
+      if (!choice) {
+        navigate(`/user-dashboard/menu`);
         return;
       }
 
-      const userData = userSnap.data();
-      const userDiabetesType = userData.diabetesType?.toLowerCase() || "none";
-      const recipeDiabetesType = recipe.diabetesType?.toLowerCase() || "";
+      choice = choice.toLowerCase();
 
-      if (recipeDiabetesType === "none" && userDiabetesType !== "none") {
-        const confirmMessage = `Công thức này dành cho người tiểu đường loại: ${recipe.diabetesType}. Bạn có muốn tiếp tục không?`;
-        if (window.confirm(confirmMessage)) {
-          navigate(`/user-dashboard/menu/recipes/${recipe.id}`);
-        }
-      } else {
+      if (choice === "alt") {
+        navigate(`/user-dashboard/menu/altRecipes/${recipe.id}`);
+      } else if (choice === "yes") {
         navigate(`/user-dashboard/menu/recipes/${recipe.id}`);
+      } else {
+        navigate(`/user-dashboard/menu`);
       }
-    } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-      alert("Đã có lỗi xảy ra, vui lòng thử lại.");
+    } else {
+      navigate(`/user-dashboard/menu/recipes/${recipe.id}`);
     }
-  };
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+    alert("Đã có lỗi xảy ra, vui lòng thử lại.");
+  }
+};
+
 
   return (
     <div className="h-screen flex flex-col bg-[#FFF6F0]">

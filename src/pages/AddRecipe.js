@@ -125,7 +125,7 @@ function AddRecipe() {
           className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />
         <input
-          type="text"
+          type="number"
           name="carbohydrates"
           value={recipe.carbohydrates}
           onChange={handleChange}

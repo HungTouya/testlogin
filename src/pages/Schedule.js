@@ -7,6 +7,7 @@ function Schedule() {
   const [schedule, setSchedule] = useState({});
   const [customSchedule, setCustomSchedule] = useState({});
   const [recipesList, setRecipesList] = useState([]);
+  const [recipesDataMap, setRecipesDataMap] = useState({});
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [editingMode, setEditingMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,14 +30,14 @@ function Schedule() {
         const scheduleDoc = await getDoc(doc(db, "schedules", diabetesType));
         setSchedule(scheduleDoc.data() || {});
 
-        const recipesSnap = await getDoc(doc(db, "customSchedules", auth.currentUser.uid));
-        if (recipesSnap.exists()) {
-          setCustomSchedule(recipesSnap.data());
+        const customSnap = await getDoc(doc(db, "customSchedules", auth.currentUser.uid));
+        if (customSnap.exists()) {
+          setCustomSchedule(customSnap.data());
         } else {
           const custom = {};
-          days.forEach((day) => {
+          days.forEach(day => {
             custom[day] = {};
-            meals.forEach((meal) => {
+            meals.forEach(meal => {
               custom[day][meal] = `${favoriteFlavors[0] || "Healthy"} ${meal}`;
             });
           });
@@ -44,9 +45,16 @@ function Schedule() {
         }
 
         const recipesSnapshot = await getDocs(collection(db, "recipes"));
-        const recipes = recipesSnapshot.docs.map(doc => doc.data().name);
+        const recipes = [];
+        const recipeMap = {};
+        recipesSnapshot.docs.forEach(doc => {
+          const data = doc.data();
+          recipes.push(data.name);
+          recipeMap[data.name] = data;
+        });
         setRecipesList(recipes);
         setFilteredRecipes(recipes);
+        setRecipesDataMap(recipeMap);
       } catch (err) {
         console.error("Failed to fetch schedules:", err);
       } finally {
@@ -75,44 +83,71 @@ function Schedule() {
         {meals.map((meal, i) => (
           <tr key={i} className="text-center hover:bg-gray-100">
             <td className="border border-gray-300 px-4 py-2 font-semibold bg-[#F6C28B] text-[#3E1F00]">{meal}</td>
-            {days.map((day, j) => (
-              <td key={j} className="border border-gray-300 px-4 py-2">
-                {editingMode && activeTab === "custom" && editingMeal === `${day}-${meal}` ? (
-                  <div className="relative">
-                    <select
-                      className="border p-1 w-full"
-                      value={customSchedule[day]?.[meal] || ""}
-                      onChange={(e) => {
-                        const updated = { ...customSchedule };
-                        if (!updated[day]) updated[day] = {};
-                        updated[day][meal] = e.target.value;
-                        setCustomSchedule(updated);
-                      }}
-                    >
-                      <option value="">Select</option>
-                      {filteredRecipes.map((r, idx) => (
-                        <option key={idx} value={r}>{r}</option>
-                      ))}
-                    </select>
-                    <button 
-                      onClick={() => setEditingMeal(null)} 
-                      className="absolute top-1 right-1 text-red-500"
-                    >
-                      X
-                    </button>
-                  </div>
-                ) : (
-                  <div 
-                    onClick={() => setEditingMeal(`${day}-${meal}`)} 
-                    className="cursor-pointer text-blue-500"
-                  >
-                    {data[day]?.[meal] || "-"}
-                  </div>
-                )}
-              </td>
-            ))}
+            {days.map((day, j) => {
+              const recipeName = data[day]?.[meal];
+              const recipe = recipesDataMap[recipeName];
+              return (
+                <td key={j} className="border border-gray-300 px-4 py-2">
+                  {editingMode && activeTab === "custom" && editingMeal === `${day}-${meal}` ? (
+                    <div className="relative">
+                      <select
+                        className="border p-1 w-full"
+                        value={customSchedule[day]?.[meal] || ""}
+                        onChange={(e) => {
+                          const updated = { ...customSchedule };
+                          if (!updated[day]) updated[day] = {};
+                          updated[day][meal] = e.target.value;
+                          setCustomSchedule(updated);
+                        }}
+                      >
+                        <option value="">Select</option>
+                        {filteredRecipes.map((r, idx) => (
+                          <option key={idx} value={r}>{r}</option>
+                        ))}
+                      </select>
+                      <button 
+                        onClick={() => setEditingMeal(null)} 
+                        className="absolute top-1 right-1 text-red-500"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ) : (
+                    <div onClick={() => setEditingMeal(`${day}-${meal}`)} className="cursor-pointer text-blue-500">
+                      <div>{recipeName || "-"}</div>
+                      {recipe && (
+                        <div className="text-xs text-gray-500">
+                          {recipe.kcal} kcal, {recipe.carbohydrates}g carbs
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </td>
+              );
+            })}
           </tr>
         ))}
+        {/* Nutrition Summary Row */}
+        <tr className="bg-[#F6E7D8] font-semibold">
+          <td className="border border-gray-300 px-4 py-2 text-[#3E1F00]">Calories</td>
+          {days.map(day => {
+            const total = meals.reduce((acc, meal) => {
+              const recipe = recipesDataMap[data[day]?.[meal]];
+              return acc + (recipe?.kcal || 0);
+            }, 0);
+            return <td key={day} className="border border-gray-300 px-4 py-2">{total}</td>;
+          })}
+        </tr>
+        <tr className="bg-[#F6E7D8] font-semibold">
+          <td className="border border-gray-300 px-4 py-2 text-[#3E1F00]">Carbohydrates</td>
+          {days.map(day => {
+            const total = meals.reduce((acc, meal) => {
+              const recipe = recipesDataMap[data[day]?.[meal]];
+              return acc + Number(recipe?.carbohydrates || 0);
+            }, 0);
+            return <td key={day} className="border border-gray-300 px-4 py-2">{total}</td>;
+          })}
+        </tr>
       </tbody>
     </table>
   );
@@ -120,22 +155,20 @@ function Schedule() {
   return (
     <div className="min-h-screen bg-[#FFF8F1] p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Lịch ăn hàng tuần</h1>
-
-<div className="flex justify-center gap-6 mb-6">
-  <button
-    className={`px-4 py-2 rounded-lg font-medium ${activeTab === "expert" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
-    onClick={() => setActiveTab("expert")}
-  >
-    Expert Recommendation
-  </button>
-  <button
-    className={`px-4 py-2 rounded-lg font-medium ${activeTab === "custom" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
-    onClick={() => setActiveTab("custom")}
-  >
-    User Customize
-  </button>
-</div>
-
+      <div className="flex justify-center gap-6 mb-6">
+        <button
+          className={`px-4 py-2 rounded-lg font-medium ${activeTab === "expert" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
+          onClick={() => setActiveTab("expert")}
+        >
+          Expert Recommendation
+        </button>
+        <button
+          className={`px-4 py-2 rounded-lg font-medium ${activeTab === "custom" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
+          onClick={() => setActiveTab("custom")}
+        >
+          User Customize
+        </button>
+      </div>
 
       {activeTab === "custom" && (
         <div className="text-center my-4">
@@ -176,19 +209,9 @@ function Schedule() {
           {activeTab === "custom" && renderTable(customSchedule)}
         </div>
       )}
-
-      {activeTab === "custom" && (
-        <div className="fixed bottom-4 right-4 z-50">
-          <df-messenger
-            intent="WELCOME"
-            chat-title="MealBot"
-            agent-id="asdf-fdd3b"
-            language-code="en"
-          ></df-messenger>
-        </div>
-      )}
     </div>
   );
 }
 
 export default Schedule;
+

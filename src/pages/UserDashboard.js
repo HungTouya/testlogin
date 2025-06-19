@@ -7,7 +7,7 @@ import Profile from "./Profile";
 import RecipePage from "./RecipePage";
 import AltRecipePage from "./AltRecipePage";
 import Navbar from "../comp/Navbar";
-import Chatbox from "../chatbox/chatbox";
+import Chatbox from "../chatbox/Chatbox";
 import "../css/UserDashboard.css";
 
 function UserDashboard() {

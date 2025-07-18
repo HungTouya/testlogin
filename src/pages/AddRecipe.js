@@ -21,18 +21,19 @@ function AddRecipe() {
   });
   const [image, setImage] = useState(null);
 
-  const determineDiabetesType = (kcal, carbs) => {
-    const carbsValue = parseInt(carbs.replace("g", "").trim());
-    const kcalValue = Number(kcal);
+const determineDiabetesType = (kcal, carbs) => {
+  const carbsValue = parseInt(carbs.replace("g", "").trim());
+  const kcalValue = Number(kcal);
 
-    if (carbsValue < 50 && kcalValue < 500) {
-      return "Type 2";
-    } else if (carbsValue >= 50 && kcalValue >= 500) {
-      return "None";
-    } else {
-      return "Type 1";
-    }
-  };
+  if (carbsValue >= 30 && carbsValue <= 50 && kcalValue >= 350 && kcalValue <= 500) {
+    return "Type 2";
+  }
+  if (carbsValue <= 60 && kcalValue <= 600) {
+    return "Type 1";
+  }
+  return "None";
+};
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

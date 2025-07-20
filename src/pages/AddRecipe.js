@@ -21,16 +21,25 @@ function AddRecipe() {
   });
   const [image, setImage] = useState(null);
 
+  // ✅ Updated logic as per classification slide
   const determineDiabetesType = (kcal, carbs) => {
-    const carbsValue = parseInt(carbs.replace("g", "").trim());
+    const carbsValue = parseFloat(carbs); // no need to remove 'g'
     const kcalValue = Number(kcal);
 
-    if (carbsValue < 50 && kcalValue < 500) {
+    const isType2 =
+      carbsValue >= 30 && carbsValue <= 50 &&
+      kcalValue >= 350 && kcalValue <= 500;
+
+    const isType1 =
+      carbsValue <= 60 &&
+      kcalValue <= 600;
+
+    if (isType2) {
       return "Type 2";
-    } else if (carbsValue >= 50 && kcalValue >= 500) {
-      return "None";
-    } else {
+    } else if (isType1) {
       return "Type 1";
+    } else {
+      return "Not Classified";
     }
   };
 
@@ -60,7 +69,7 @@ function AddRecipe() {
       await addDoc(collection(db, "recipes"), {
         name: recipe.name,
         kcal: Number(recipe.kcal),
-        carbohydrates: recipe.carbohydrates,
+        carbohydrates: parseFloat(recipe.carbohydrates),
         fat: recipe.fat,
         protein: recipe.protein,
         ingredients: recipe.ingredients.split(",").map((i) => i.trim()),
@@ -129,7 +138,7 @@ function AddRecipe() {
           name="carbohydrates"
           value={recipe.carbohydrates}
           onChange={handleChange}
-          placeholder="Carbohydrates (e.g., 40g)"
+          placeholder="Carbohydrates (g)"
           required
           className="w-full p-3 border border-[#FFA07A] rounded mb-3"
         />

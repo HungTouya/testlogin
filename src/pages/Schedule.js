@@ -16,7 +16,7 @@ function Schedule() {
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const meals = ["Breakfast", "Lunch", "Dinner"];
-  const CALORIE_LIMIT = 2250;
+  const CALORIE_LIMIT = 1800;
 
   useEffect(() => {
     const fetchData = async () => {

@@ -16,6 +16,7 @@ function Schedule() {
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   const meals = ["Breakfast", "Lunch", "Dinner"];
+  const CALORIE_LIMIT = 2250;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +69,16 @@ function Schedule() {
     const filtered = recipesList.filter(r => r.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredRecipes(filtered);
   }, [searchTerm, recipesList]);
+
+  const getExceededDays = (data) => {
+    return days.filter(day => {
+      const total = meals.reduce((sum, meal) => {
+        const recipe = recipesDataMap[data[day]?.[meal]];
+        return sum + (recipe?.kcal || 0);
+      }, 0);
+      return total > CALORIE_LIMIT;
+    });
+  };
 
   const renderTable = (data) => (
     <table className="w-full border-collapse border border-gray-300 bg-white shadow-lg mt-4">
@@ -135,7 +146,14 @@ function Schedule() {
               const recipe = recipesDataMap[data[day]?.[meal]];
               return acc + (recipe?.kcal || 0);
             }, 0);
-            return <td key={day} className="border border-gray-300 px-4 py-2">{total}</td>;
+            return (
+              <td
+                key={day}
+                className={`border border-gray-300 px-4 py-2 ${total > CALORIE_LIMIT ? "text-red-500 font-bold" : ""}`}
+              >
+                {total}
+              </td>
+            );
           })}
         </tr>
         <tr className="bg-[#F6E7D8] font-semibold">
@@ -207,6 +225,17 @@ function Schedule() {
         <div className="overflow-x-auto">
           {activeTab === "expert" && renderTable(schedule)}
           {activeTab === "custom" && renderTable(customSchedule)}
+
+          {activeTab === "custom" && !loading && (() => {
+            const exceededDays = getExceededDays(customSchedule);
+            return exceededDays.length > 0 && (
+              <div className="mt-4 text-red-600 font-semibold text-center">
+                {exceededDays.map((day, idx) => (
+                  <div key={idx}>Hãy chỉnh lại lịch ăn thứ {day}</div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

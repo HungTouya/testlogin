@@ -10,7 +10,7 @@ function Toolbar() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/login"); // ✅ Redirect to login page after logout
+      navigate("/login"); 
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -20,7 +20,7 @@ function Toolbar() {
     <div className="toolbar">
       <Link to="/menu">Menu</Link>
       <Link to="/profile">Profile</Link>
-      <button onClick={handleLogout} className="logout-btn">Logout</button> {/* ✅ Logout Button */}
+      <button onClick={handleLogout} className="logout-btn">Logout</button> 
     </div>
   );
 }

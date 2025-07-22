@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 const quizQuestions = [
   {
-    question: "What type of diabetes do you have?",
+    question: "Bạn bị tiểu đường loại mấy?",
     options: [
       { value: "none", label: "None" },
       { value: "1", label: "Type 1" },
@@ -12,7 +12,7 @@ const quizQuestions = [
     ]
   },
   {
-    question: "What are your favorite flavors?",
+    question: "Bạn thích vị gì?",
     options: [
       { value: "Sweet", label: "Sweet" },
       { value: "Spicy", label: "Spicy" },
@@ -63,7 +63,9 @@ function Profile() {
       try {
         await updateDoc(userRef, { 
           name: updatedData.name, 
-          phone: updatedData.phone 
+          phone: updatedData.phone,
+          diabetesType,  
+          favoriteFlavors 
         });
         setUserData({ ...userData, name: updatedData.name, phone: updatedData.phone });
         setEditing(false);
@@ -154,25 +156,58 @@ function Profile() {
       <div className="max-w-4xl mx-auto mt-6">
         <div className="bg-white shadow-lg rounded-lg p-4 flex justify-center gap-6">
           <button
-            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "profile" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-500"}`}
+            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "profile" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
             onClick={() => setActiveTab("profile")}
           >
-            My Profile
+            Profile
           </button>
           <button
-            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "flavor" ? "bg-blue-600 text-white" : "text-gray-600 hover:text-blue-500"}`}
+            className={`px-4 py-2 rounded-lg font-medium ${activeTab === "flavor" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
             onClick={() => setActiveTab("flavor")}
           >
-            Flavor & Health
+            Hương vị & Sức khỏe
           </button>
         </div>
       </div>
       <div className="max-w-4xl mx-auto mt-6">
         {activeTab === "profile" && (
           <div className="bg-white shadow-lg rounded-lg p-6">
-            <p className="text-lg"><strong>Name:</strong> {userData.name}</p>
-            <p className="text-lg"><strong>Email:</strong> {userData.email}</p>
-            <p className="text-lg"><strong>Phone:</strong> {userData.phone}</p>
+            {editing ? (
+              <>
+                <input
+                  type="text"
+                  value={updatedData.name}
+                  onChange={(e) => setUpdatedData({ ...updatedData, name: e.target.value })}
+                  className="border rounded-md p-2 mb-4 w-full"
+                  placeholder="Name"
+                />
+                <input
+                  type="text"
+                  value={updatedData.phone}
+                  onChange={(e) => setUpdatedData({ ...updatedData, phone: e.target.value })}
+                  className="border rounded-md p-2 mb-4 w-full"
+                  placeholder="Phone"
+                />
+                <button
+                  onClick={handleSave}
+                  className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Save Changes
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-lg"><strong>Tên:</strong> {userData.name}</p>
+                <p className="text-lg"><strong>Email:</strong> {userData.email}</p>
+                <p className="text-lg"><strong>SĐT:</strong> {userData.phone}</p>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Edit
+                </button>
+              </>
+            )}
           </div>
         )}
         {activeTab === "flavor" && (
@@ -180,7 +215,7 @@ function Profile() {
             {quizSubmitted ? (
               <div>
                 <p className="text-lg"><strong>Diabetes Type:</strong> {diabetesType}</p>
-                <p className="text-lg"><strong>Favorite Flavors:</strong> {favoriteFlavors.join(", ")}</p>
+                <p className="text-lg"><strong>Hương vị yêu thích:</strong> {favoriteFlavors.join(", ")}</p>
                 <button onClick={handleRetakeQuiz} className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg">
                   Retake Quiz
                 </button>

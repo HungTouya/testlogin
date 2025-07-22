@@ -32,7 +32,6 @@ function Register() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Store user data in Firestore with role automatically set to "user"
             await setDoc(doc(db, "customersData", user.uid), {
                 name: customerName,
                 phone,
@@ -42,7 +41,9 @@ function Register() {
                 role: "user",
             });
 
-            navigate("/profile");
+            window.alert("Account created successfully!");
+            navigate("/login");
+
         } catch (err) {
             setError(err.message);
         }
@@ -97,6 +98,7 @@ function Register() {
 }
 
 export default Register;
+
 
 
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
-import SearchBar from "./Searchbar"; // Import the SearchBar component
+import SearchBar from "./Searchbar"; 
 
 function Navbar() {
     const navigate = useNavigate();
@@ -14,13 +14,11 @@ function Navbar() {
     return (
         <nav className="fixed top-0 left-0 w-full bg-[#FAECD2] shadow-md z-50 h-16 flex items-center">
             <div className="max-w-screen-xl mx-auto flex justify-between items-center w-full px-6">
-                {/* Left: Logo & SearchBar */}
                 <div className="flex items-center space-x-6">
                     <span className="text-2xl font-semibold text-[#4e342e]">DiabeticMealPlan</span>
-                    <SearchBar className="hidden md:block" /> {/* SearchBar visible on medium screens and up */}
+                    <SearchBar className="hidden md:block" />
                 </div>
 
-                {/* Center: Navigation Links */}
                 <div className="hidden md:flex">
                     <ul className="flex space-x-6 font-medium">
                         <li>
@@ -46,10 +44,9 @@ function Navbar() {
                     </ul>
                 </div>
 
-                {/* Right: Logout Button */}
                 <button 
                     onClick={handleLogout} 
-                    className="bg-[#1347A3] text-white py-2 px-4 rounded-md hover:bg-[#0f3b82]"
+                    className="bg-[#FFA07A] text-white py-2 px-4 rounded-md hover:bg-[#6F4F37]"
                 >
                     Logout
                 </button>

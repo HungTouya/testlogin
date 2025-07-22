@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "browser-image-compression": "^2.0.2",
     "dialogflow-fulfillment": "^0.6.1",
     "firebase": "^11.3.1",
     "firebase-admin": "^11.11.1",

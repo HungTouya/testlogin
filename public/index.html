@@ -10,12 +10,19 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>DiabeticMealPlan</title>
 
-    <!-- ✅ Keep only the Dialogflow script -->
     <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
   </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <df-messenger
+    intent="WELCOME"
+    chat-title="Diabeticschedulechat"
+    agent-id="50e0a08b-611f-455e-8543-a40f503d3d2b"
+    language-code="vi">
+  </df-messenger>
+</body>
+
 </html>
 

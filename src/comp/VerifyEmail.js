@@ -1,4 +1,3 @@
-// src/VerifyEmail.js  
 import React, { useEffect, useState } from 'react';  
 import { useAuthValue } from './AuthContext';  
 import { useHistory } from 'react-router-dom';  

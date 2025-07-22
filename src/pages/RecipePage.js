@@ -10,7 +10,6 @@ function RecipePage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if current route is from altRecipes
   const isAlt = location.pathname.includes("altRecipes");
 
   useEffect(() => {

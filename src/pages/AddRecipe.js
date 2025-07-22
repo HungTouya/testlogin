@@ -21,9 +21,8 @@ function AddRecipe() {
   });
   const [image, setImage] = useState(null);
 
-  // ✅ Updated logic as per classification slide
   const determineDiabetesType = (kcal, carbs) => {
-    const carbsValue = parseFloat(carbs); // no need to remove 'g'
+    const carbsValue = parseFloat(carbs); 
     const kcalValue = Number(kcal);
 
     const isType2 =

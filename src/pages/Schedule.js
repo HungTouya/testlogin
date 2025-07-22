@@ -14,9 +14,29 @@ function Schedule() {
   const [loading, setLoading] = useState(true);
   const [editingMeal, setEditingMeal] = useState(null);
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const meals = ["Breakfast", "Lunch", "Dinner"];
-  const CALORIE_LIMIT = 1800;
+  const CALORIE_UPPER_LIMIT = 1800;
+  const CALORIE_LOWER_LIMIT = 1000;
+
+  const DAY_MAP = {
+    "Thứ Hai": "Monday",
+    "Thứ Ba": "Tuesday",
+    "Thứ Tư": "Wednesday",
+    "Thứ Năm": "Thursday",
+    "Thứ Sáu": "Friday",
+    "Thứ Bảy": "Saturday",
+    "Chủ Nhật": "Sunday",
+  };
+
+  const MEAL_MAP = {
+    "Bữa sáng": "Breakfast",
+    "Bữa trưa": "Lunch",
+    "Bữa tối": "Dinner",
+  };
+
+  const daysVN = Object.keys(DAY_MAP);
+  const mealsVN = Object.keys(MEAL_MAP);
+  const days = Object.values(DAY_MAP);
+  const meals = Object.values(MEAL_MAP);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,75 +90,84 @@ function Schedule() {
     setFilteredRecipes(filtered);
   }, [searchTerm, recipesList]);
 
-  const getExceededDays = (data) => {
-    return days.filter(day => {
+  const getInvalidDays = (data) => {
+    const overDays = [];
+    const underDays = [];
+
+    days.forEach((dayEN, idx) => {
       const total = meals.reduce((sum, meal) => {
-        const recipe = recipesDataMap[data[day]?.[meal]];
+        const recipe = recipesDataMap[data[dayEN]?.[meal]];
         return sum + (recipe?.kcal || 0);
       }, 0);
-      return total > CALORIE_LIMIT;
+      const dayVN = daysVN[idx];
+      if (total > CALORIE_UPPER_LIMIT) overDays.push(dayVN);
+      else if (total < CALORIE_LOWER_LIMIT) underDays.push(dayVN);
     });
+
+    return { overDays, underDays };
   };
 
   const renderTable = (data) => (
     <table className="w-full border-collapse border border-gray-300 bg-white shadow-lg mt-4">
       <thead>
         <tr className="bg-[#FCD5B5] text-[#3E1F00]">
-          <th className="border border-gray-300 px-4 py-2">Meal</th>
-          {days.map((day, i) => (
-            <th key={i} className="border border-gray-300 px-4 py-2">{day}</th>
+          <th className="border border-gray-300 px-4 py-2">Bữa ăn</th>
+          {daysVN.map((dayVN, i) => (
+            <th key={i} className="border border-gray-300 px-4 py-2">{dayVN}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {meals.map((meal, i) => (
-          <tr key={i} className="text-center hover:bg-gray-100">
-            <td className="border border-gray-300 px-4 py-2 font-semibold bg-[#F6C28B] text-[#3E1F00]">{meal}</td>
-            {days.map((day, j) => {
-              const recipeName = data[day]?.[meal];
-              const recipe = recipesDataMap[recipeName];
-              return (
-                <td key={j} className="border border-gray-300 px-4 py-2">
-                  {editingMode && activeTab === "custom" && editingMeal === `${day}-${meal}` ? (
-                    <div className="relative">
-                      <select
-                        className="border p-1 w-full"
-                        value={customSchedule[day]?.[meal] || ""}
-                        onChange={(e) => {
-                          const updated = { ...customSchedule };
-                          if (!updated[day]) updated[day] = {};
-                          updated[day][meal] = e.target.value;
-                          setCustomSchedule(updated);
-                        }}
-                      >
-                        <option value="">Select</option>
-                        {filteredRecipes.map((r, idx) => (
-                          <option key={idx} value={r}>{r}</option>
-                        ))}
-                      </select>
-                      <button 
-                        onClick={() => setEditingMeal(null)} 
-                        className="absolute top-1 right-1 text-red-500"
-                      >
-                        X
-                      </button>
-                    </div>
-                  ) : (
-                    <div onClick={() => setEditingMeal(`${day}-${meal}`)} className="cursor-pointer text-blue-500">
-                      <div>{recipeName || "-"}</div>
-                      {recipe && (
-                        <div className="text-xs text-gray-500">
-                          {recipe.kcal} kcal, {recipe.carbohydrates}g carbs
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </td>
-              );
-            })}
-          </tr>
-        ))}
-        {/* Nutrition Summary Row */}
+        {mealsVN.map((mealVN, i) => {
+          const mealEN = MEAL_MAP[mealVN];
+          return (
+            <tr key={i} className="text-center hover:bg-gray-100">
+              <td className="border border-gray-300 px-4 py-2 font-semibold bg-[#F6C28B] text-[#3E1F00]">{mealVN}</td>
+              {days.map((dayEN, j) => {
+                const recipeName = data[dayEN]?.[mealEN];
+                const recipe = recipesDataMap[recipeName];
+                return (
+                  <td key={j} className="border border-gray-300 px-4 py-2">
+                    {editingMode && activeTab === "custom" && editingMeal === `${dayEN}-${mealEN}` ? (
+                      <div className="relative">
+                        <select
+                          className="border p-1 w-full"
+                          value={customSchedule[dayEN]?.[mealEN] || ""}
+                          onChange={(e) => {
+                            const updated = { ...customSchedule };
+                            if (!updated[dayEN]) updated[dayEN] = {};
+                            updated[dayEN][mealEN] = e.target.value;
+                            setCustomSchedule(updated);
+                          }}
+                        >
+                          <option value="">Chọn món</option>
+                          {filteredRecipes.map((r, idx) => (
+                            <option key={idx} value={r}>{r}</option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => setEditingMeal(null)}
+                          className="absolute top-1 right-1 text-red-500"
+                        >
+                          X
+                        </button>
+                      </div>
+                    ) : (
+                      <div onClick={() => setEditingMeal(`${dayEN}-${mealEN}`)} className="cursor-pointer text-blue-500">
+                        <div>{recipeName || "-"}</div>
+                        {recipe && (
+                          <div className="text-xs text-gray-500">
+                            {recipe.kcal} kcal, {recipe.carbohydrates}g carbs
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
         <tr className="bg-[#F6E7D8] font-semibold">
           <td className="border border-gray-300 px-4 py-2 text-[#3E1F00]">Calories</td>
           {days.map(day => {
@@ -149,7 +178,7 @@ function Schedule() {
             return (
               <td
                 key={day}
-                className={`border border-gray-300 px-4 py-2 ${total > CALORIE_LIMIT ? "text-red-500 font-bold" : ""}`}
+                className={`border border-gray-300 px-4 py-2 ${total > CALORIE_UPPER_LIMIT || total < CALORIE_LOWER_LIMIT ? "text-red-500 font-bold" : ""}`}
               >
                 {total}
               </td>
@@ -178,13 +207,13 @@ function Schedule() {
           className={`px-4 py-2 rounded-lg font-medium ${activeTab === "expert" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
           onClick={() => setActiveTab("expert")}
         >
-          Expert Recommendation
+          Gợi ý từ chuyên gia
         </button>
         <button
           className={`px-4 py-2 rounded-lg font-medium ${activeTab === "custom" ? "bg-[#7B3F00] text-white" : "bg-[#FCD5B5] text-[#3E1F00] hover:bg-[#F6C28B]"}`}
           onClick={() => setActiveTab("custom")}
         >
-          User Customize
+          Người dùng tùy chỉnh
         </button>
       </div>
 
@@ -195,7 +224,7 @@ function Schedule() {
               className="bg-[#F6C28B] text-white px-4 py-2 rounded hover:bg-[#A0522D]"
               onClick={() => setEditingMode(true)}
             >
-              Edit Schedule
+              Chỉnh sửa lịch ăn
             </button>
           ) : (
             <>
@@ -206,13 +235,13 @@ function Schedule() {
                   setEditingMode(false);
                 }}
               >
-                Save Schedule
+                Lưu lịch ăn
               </button>
               <button
                 className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
                 onClick={() => setEditingMode(false)}
               >
-                Cancel
+                Hủy
               </button>
             </>
           )}
@@ -220,18 +249,27 @@ function Schedule() {
       )}
 
       {loading ? (
-        <p className="text-center">Loading...</p>
+        <p className="text-center">Đang tải dữ liệu...</p>
       ) : (
         <div className="overflow-x-auto">
           {activeTab === "expert" && renderTable(schedule)}
           {activeTab === "custom" && renderTable(customSchedule)}
 
           {activeTab === "custom" && !loading && (() => {
-            const exceededDays = getExceededDays(customSchedule);
-            return exceededDays.length > 0 && (
-              <div className="mt-4 text-red-600 font-semibold text-center">
-                {exceededDays.map((day, idx) => (
-                  <div key={idx}>Hãy chỉnh lại lịch ăn thứ {day}</div>
+            const { overDays, underDays } = getInvalidDays(customSchedule);
+            if (overDays.length === 0 && underDays.length === 0) return null;
+
+            return (
+              <div className="mt-4 font-semibold text-center text-red-600 space-y-1">
+                {overDays.map((day, idx) => (
+                  <div key={`over-${idx}`}>
+                    Calories vượt quá mức cho phép, hãy chỉnh lại lịch ăn vào <b>{day}</b>.
+                  </div>
+                ))}
+                {underDays.map((day, idx) => (
+                  <div key={`under-${idx}`}>
+                    Calories thấp hơn mức cho phép, hãy chỉnh lại lịch ăn vào <b>{day}</b>.
+                  </div>
                 ))}
               </div>
             );
@@ -243,4 +281,3 @@ function Schedule() {
 }
 
 export default Schedule;
-
